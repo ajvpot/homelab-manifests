@@ -1,0 +1,63 @@
+version: "3.1"
+
+services:
+  flood:
+    image: jesec/flood
+    user: 1000:1001
+    restart: unless-stopped
+    command: --port 3001 --allowedpath /data --auth none --rtsocket ~/.local/share/rtorrent/rtorrent.sock
+    environment:
+      HOME: /config
+    volumes:
+      - /zfs/home/torrent/config:/config
+      - /zfs/home/torrent/data:/data
+    ports:
+      - 3001:3001
+    deploy: &masterOnly
+      placement:
+        constraints:
+          - node.hostname == nixkube
+
+  rtorrent:
+    deploy: *masterOnly
+    image: jesec/rtorrent
+    user: 1000:1001
+    tty: true
+    restart: unless-stopped
+    command: -o network.port_range.set=6881-6881,system.daemon.set=true
+    environment:
+      HOME: /config
+    volumes:
+      - /zfs/home/torrent/config:/config
+      - /zfs/home/torrent/data:/data
+    ports:
+      - 6881:6881
+
+  radarr:
+    deploy: *masterOnly
+    restart: unless-stopped
+    ports:
+      - 7878:7878
+    volumes:
+      - /zfs/home/torrent/config:/config
+      - /zfs/home/torrent/data:/data
+    environment:
+      - PUID=1000
+      - PGID=1001
+      - TZ=America/New_York
+    image: linuxserver/radarr
+
+  sonarr:
+    deploy: *masterOnly
+    restart: unless-stopped
+    ports:
+      - 8989:7878
+    volumes:
+      - /zfs/home/torrent/config:/config
+      - /zfs/home/torrent/data:/data
+    environment:
+      - PUID=1000
+      - PGID=1001
+      - TZ=America/New_York
+    image: linuxserver/sonarr
+

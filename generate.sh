@@ -6,7 +6,10 @@ then
     chmod +x kompose
     sudo mv ./kompose /usr/local/bin/kompose
 fi
+function komposeConvert() {
+	kompose convert -c --volumes hostPath -f $1.yaml
+}
 
-pushd seedbox
-kompose convert -c --volumes hostPath
-popd
+cd compose
+komposeConvert seedbox
+komposeConvert octoprint

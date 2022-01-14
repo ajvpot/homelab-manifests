@@ -30,6 +30,12 @@ jobs:
         #overrideFiles: './seedbox/values-override.yaml'
         helm-version: 'latest' 
       id: bake_seedbox
+    - uses: azure/k8s-bake@v1
+      with:
+        renderEngine: 'helm'
+        helmChart: './octoprint/docker-compose/'
+        helm-version: 'latest' 
+      id: bake_octoprint
     - uses: Azure/k8s-deploy@v1
       with:
         manifests: ${{ steps.bake_seedbox.outputs.manifestsBundle }}

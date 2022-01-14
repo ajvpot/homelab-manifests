@@ -29,8 +29,7 @@ jobs:
         helmChart: './seedbox/docker-compose/' 
         #overrideFiles: './seedbox/values-override.yaml'
         helm-version: 'latest' 
-      id: bake2
-
+      id: bake_seedbox
     - uses: Azure/k8s-deploy@v1
       with:
-        manifests: ${{ steps.bake.outputs.manifestsBundle }}
+        manifests: ${{ steps.bake_seedbox.outputs.manifestsBundle }}

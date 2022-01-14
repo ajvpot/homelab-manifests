@@ -16,7 +16,7 @@ services:
     deploy:
       placement:
         constraints:
-          - node.hostname == threedprint
+          - node.hostname == twodprint
 
 volumes:
   octoprint:

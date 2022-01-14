@@ -27,7 +27,7 @@ jobs:
       with:
         renderEngine: 'helm'
         helmChart: './seedbox/docker-compose/' 
-        overrideFiles: './seedbox/values-override.yaml'
+        #overrideFiles: './seedbox/values-override.yaml'
         helm-version: 'latest' 
       id: bake2
 

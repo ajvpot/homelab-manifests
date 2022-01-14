@@ -23,19 +23,27 @@ jobs:
         kubeconfig: ${{ secrets.KUBE_CONFIG }}
     - name: Generate
       run: ./generate.sh
+
+
     - uses: azure/k8s-bake@v1
       with:
         renderEngine: 'helm'
-        helmChart: './seedbox/docker-compose/' 
+        helmChart: './compose/seedbox/' 
         #overrideFiles: './seedbox/values-override.yaml'
         helm-version: 'latest' 
       id: bake_seedbox
+    - uses: Azure/k8s-deploy@v1
+      with:
+        manifests: ${{ steps.bake_seedbox.outputs.manifestsBundle }}
+
+
+
     - uses: azure/k8s-bake@v1
       with:
         renderEngine: 'helm'
-        helmChart: './octoprint/docker-compose/'
+        helmChart: './compose/octoprint/' 
         helm-version: 'latest' 
       id: bake_octoprint
     - uses: Azure/k8s-deploy@v1
       with:
-        manifests: ${{ steps.bake_seedbox.outputs.manifestsBundle }}
+        manifests: ${{ steps.bake_octoprint.outputs.manifestsBundle }}

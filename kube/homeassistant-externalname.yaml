@@ -12,8 +12,17 @@ spec:
       kind: Rule
       services:
         - name: homeassistant
-          port: 8443
-
+          port: 80
+    - match: Host(`sso.vanderpot.net`)
+      kind: Rule
+      services:
+        - name: homeassistant
+          port: 80
+    - match: Host(`nginx.vanderpot.net`)
+      kind: Rule
+      services:
+        - name: homeassistant
+          port: 80
 ---
 apiVersion: v1
 kind: Service

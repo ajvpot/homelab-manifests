@@ -46,6 +46,8 @@ services:
       - PGID=1001
       - TZ=America/New_York
     image: linuxserver/radarr
+    labels:
+      kompose.service.expose: "media.vanderpot.net/radarr"
 
   sonarr:
     deploy: *masterOnly
@@ -60,4 +62,6 @@ services:
       - PGID=1001
       - TZ=America/New_York
     image: linuxserver/sonarr
+    labels:
+      kompose.service.expose: "media.vanderpot.net/sonarr"
 

@@ -45,8 +45,8 @@ jobs:
       id: kube_manifests
     - uses: Azure/k8s-deploy@v1
       with:
-        #           ${{ steps.bake_seedbox.outputs.manifestsBundle }}
-        #          ${{ steps.bake_octoprint.outputs.manifestsBundle }}
+
         manifests: |
           ${{ steps.kube_manifests.outputs.manifestsBundle }}
-          
+          ${{ steps.bake_octoprint.outputs.manifestsBundle }}
+        # ${{ steps.bake_seedbox.outputs.manifestsBundle }}

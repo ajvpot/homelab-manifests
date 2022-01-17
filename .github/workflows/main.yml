@@ -25,6 +25,7 @@ jobs:
 
     - name: Generate
       run: ./generate.sh
+    # todo switch bake to helm intall for rollback/delete
     - uses: azure/k8s-bake@v1
       with:
         renderEngine: 'helm'

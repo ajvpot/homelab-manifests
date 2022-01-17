@@ -8,8 +8,14 @@ spec:
     ports:
       websecure:
         tls:
-          #enabled: true
-          #certResolver: letsencrypt
+          enabled: true
+          certResolver: letsencrypt
+          domains:
+            - main: k8s.vanderpot.net
+              sans:
+                - hass.vanderpot.net
+                - unifi.vanderpot.net
+                - sso.vanderpot.net
     persistence:
       enabled: true
       name: data
@@ -19,7 +25,8 @@ spec:
       - "--providers.kubernetescrd.allowexternalnameservices=true"
       - "--providers.kubernetesingress.allowexternalnameservices=true"
       - "--certificatesresolvers.letsencrypt.acme.storage=/data/acme.json"
-      - "--certificatesresolvers.letsencrypt.acme.httpchallenge=true"
-      - "--certificatesresolvers.letsencrypt.acme.httpchallenge.entrypoint=web"
-      - "--certificatesresolvers.letsencrypt.acme.caserver=https://acme-staging-v02.api.letsencrypt.org/directory"
+      - "--certificatesresolvers.letsencrypt.acme.tlschallenge=true"
+      #- "--certificatesresolvers.letsencrypt.acme.httpchallenge=true"
+      #- "--certificatesresolvers.letsencrypt.acme.httpchallenge.entrypoint=web"
+      #- "--certificatesresolvers.letsencrypt.acme.caserver=https://acme-staging-v02.api.letsencrypt.org/directory"
       - "--certificatesresolvers.letsencrypt.acme.email=alex@vanderpot.com"

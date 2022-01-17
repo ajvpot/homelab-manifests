@@ -1,13 +1,3 @@
-apiVersion: helm.cattle.io/v1
-kind: HelmChartConfig
-metadata:
-  name: traefik
-  namespace: kube-system
-spec:
-  valuesContent: |-
-    additionalArguments:
-      - "--providers.kubernetescrd.allowexternalnameservices=true"
-      - "--providers.kubernetesingress.allowexternalnameservices=true"
 ---
 apiVersion: networking.k8s.io/v1
 kind: Ingress

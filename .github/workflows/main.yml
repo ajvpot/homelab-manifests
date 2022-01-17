@@ -39,10 +39,13 @@ jobs:
         helm-version: 'latest'
       id: bake_octoprint
 
-
+    - name: Get Kube Manifests
+      run: echo "::set-output name=manifestsBundle::$(ls kube)"
+      id: kube_manifests
     - uses: Azure/k8s-deploy@v1
       with:
         manifests: |
           ${{ steps.bake_seedbox.outputs.manifestsBundle }}
           ${{ steps.bake_octoprint.outputs.manifestsBundle }}
-          kube/
+          ${{ steps.kube_manifests.outputs.manifestsBundle }}
+          

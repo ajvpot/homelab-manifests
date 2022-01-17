@@ -40,7 +40,7 @@ jobs:
       id: bake_octoprint
 
     - name: Get Kube Manifests
-      run: echo "::set-output name=manifestsBundle::$(find ./kube)"
+      run: echo "::set-output name=manifestsBundle::$(find -type f -name *.yaml ./kube)"
       id: kube_manifests
     - uses: Azure/k8s-deploy@v1
       with:

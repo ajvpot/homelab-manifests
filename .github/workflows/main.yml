@@ -42,11 +42,7 @@ jobs:
 
     - uses: Azure/k8s-deploy@v1
       with:
-        manifests: ${{ steps.bake_seedbox.outputs.manifestsBundle }}
-    - uses: Azure/k8s-deploy@v1
-      with:
-        manifests: ${{ steps.bake_octoprint.outputs.manifestsBundle }}
-    - uses: Azure/k8s-deploy@v1
-      with:
         manifests: |
-          kube/*.yaml
+        ${{ steps.bake_seedbox.outputs.manifestsBundle }}
+        ${{ steps.bake_octoprint.outputs.manifestsBundle }}
+        kube/*.yaml

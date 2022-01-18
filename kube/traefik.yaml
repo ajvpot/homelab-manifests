@@ -12,6 +12,11 @@ spec:
         tls:
           enabled: true
           certResolver: letsencrypt
+      mqtt:
+        expose: true
+        exposedPort: 1883
+        port: 1883
+        protocol: TCP
     persistence:
       enabled: true
       name: data

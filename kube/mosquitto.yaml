@@ -43,17 +43,3 @@ spec:
       services:
         - name: mosquitto
           port: 1883
----
-apiVersion: helm.cattle.io/v1
-kind: HelmChartConfig
-metadata:
-  name: traefik
-  namespace: kube-system
-spec:
-  valuesContent: |-
-    ports:
-      mqtt:
-        expose: true
-        exposedPort: 1883
-        port: 1883
-        protocol: TCP

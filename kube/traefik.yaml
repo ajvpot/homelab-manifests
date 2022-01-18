@@ -6,8 +6,6 @@ metadata:
 spec:
   valuesContent: |-
     ports:
-      traefik:
-        expose: true
       websecure:
         tls:
           enabled: true

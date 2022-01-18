@@ -147,6 +147,8 @@ spec:
           - host: nodered.vanderpot.net
             paths:
               - path: /
+        #annotations:
+        #  traefik.ingress.kubernetes.io/router.middlewares: default-auth@kubernetescrd
 ---
 apiVersion: helm.cattle.io/v1
 kind: HelmChart

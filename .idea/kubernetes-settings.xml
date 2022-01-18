@@ -8,6 +8,9 @@
       <SpecSource>
         <option name="pathOrUrl" value="https://raw.githubusercontent.com/k3s-io/helm-controller/master/manifests/crd.yaml" />
       </SpecSource>
+      <SpecSource>
+        <option name="pathOrUrl" value="https://raw.githubusercontent.com/traefik/traefik-helm-chart/master/traefik/crds/middlewares.yaml" />
+      </SpecSource>
     </specSources>
   </component>
 </project>

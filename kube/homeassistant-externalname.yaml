@@ -5,9 +5,6 @@ metadata:
   name: hassapps
   namespace: default
 spec:
-  entryPoints:
-    - web
-    - websecure
   routes:
     - match: HostRegexp(`{subdomain:[a-z]+}.vanderpot.net`)
       kind: Rule
@@ -22,9 +19,6 @@ metadata:
   name: udm
   namespace: default
 spec:
-  entryPoints:
-    - web
-    - websecure
   routes:
     - match: Host(`unifi.vanderpot.net`)
       kind: Rule

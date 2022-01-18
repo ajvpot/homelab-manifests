@@ -187,4 +187,50 @@ spec:
                   values:
                     - zgateway
 ---
-
+apiVersion: helm.cattle.io/v1
+kind: HelmChart
+metadata:
+  name: ytdl
+  namespace: kube-system
+spec:
+  repo: https://k8s-at-home.com/charts/
+  chart: youtubedl-material
+  targetNamespace: default
+  valuesContent: |-
+    ingress:
+      main:
+        enabled: true
+        hosts:
+          - host: ytdl.vanderpot.net
+            paths:
+              - path: /
+    persistence:
+      config:
+        enabled: true
+        storageClass: local-path
+      audio:
+        enabled: true
+        type: hostPath
+        hostPath: /zfs/home/kube/ytdl/audio
+      subscriptions:
+        enabled: true
+        type: hostPath
+        hostPath: /zfs/home/kube/ytdl/subscriptions
+      users:
+        enabled: true
+        type: hostPath
+        hostPath: /zfs/home/kube/ytdl/users
+      video:
+        enabled: true
+        type: hostPath
+        hostPath: /zfs/home/kube/ytdl/video
+    affinity: &aff
+      nodeAffinity:
+        requiredDuringSchedulingIgnoredDuringExecution:
+          nodeSelectorTerms:
+            - matchExpressions:
+                - key: kubernetes.io/hostname
+                  operator: In
+                  values:
+                    - nixkube
+---

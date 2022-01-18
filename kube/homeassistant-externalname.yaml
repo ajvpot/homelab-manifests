@@ -6,12 +6,33 @@ metadata:
   namespace: default
 spec:
   routes:
-    - match: HostRegexp(`{subdomain:[a-z]+}.vanderpot.net`)
+    - match: Host(`food.vanderpot.net`)
       kind: Rule
       services:
         - name: homeassistant
+          port: 9002
+    - match: Host(`hass.vanderpot.net`)
+      kind: Rule
+      services:
+        - name: homeassistant
+          port: 8123
+    - match: Host(`grafana.vanderpot.net`)
+      kind: Rule
+      services:
+        - name: homeassistant
+          port: 8199
+      middlewares:
+        - name: auth
+          namespace: default
+    - match: Host(`adsb.vanderpot.net`)
+      kind: Rule
+      services:
+        - name: piaware
           port: 80
-      priority: 1
+      middlewares:
+        - name: auth
+          namespace: default
+
 ---
 apiVersion: traefik.containo.us/v1alpha1
 kind: IngressRoute
@@ -24,7 +45,8 @@ spec:
       kind: Rule
       services:
         - name: udmpro
-          port: 80
+          port: 443
+          scheme: https
 ---
 apiVersion: v1
 kind: Service
@@ -51,4 +73,17 @@ spec:
     - protocol: TCP
       port: 443
       name: https
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: piaware
+  namespace: default
+spec:
+  externalName: 10.10.10.171
+  type: ExternalName
+  ports:
+    - protocol: TCP
+      port: 80
+      name: http
 

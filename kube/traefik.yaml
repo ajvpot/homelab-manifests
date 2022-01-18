@@ -21,6 +21,9 @@ spec:
       - "--providers.kubernetescrd.allowexternalnameservices=true"
       - "--providers.kubernetescrd.allowcrossnamespace=true"
       - "--providers.kubernetesingress.allowexternalnameservices=true"
+    
+      - "--serverstransport.insecureskipverify=true"
+    
       - "--certificatesresolvers.letsencrypt.acme.storage=/data/acme.json"
       - "--certificatesresolvers.letsencrypt.acme.tlschallenge=true"
       - "--certificatesresolvers.letsencrypt.acme.email=alex@vanderpot.com"

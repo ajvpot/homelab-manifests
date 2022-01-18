@@ -1,0 +1,59 @@
+apiVersion: helm.cattle.io/v1
+kind: HelmChart
+metadata:
+  name: mosquitto
+  namespace: kube-system
+spec:
+  repo: https://k8s-at-home.com/charts/
+  chart: mosquitto
+  targetNamespace: default
+  valuesContent: |-
+    configmap:
+      configinc:
+        enabled: true
+        name: 
+        data:
+          mosquitto.conf: ""
+    persistence:
+      configinc:
+        enabled: true
+        type: configMap
+        #todo: hack
+        name: mosquitto-configinc
+    affinity: &aff
+      nodeAffinity:
+        requiredDuringSchedulingIgnoredDuringExecution:
+          nodeSelectorTerms:
+            - matchExpressions:
+                - key: kubernetes.io/hostname
+                  operator: In
+                  values:
+                    - nixkube
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRouteTCP
+metadata:
+  name: mosquitto.route
+  namespace: default
+spec:
+  entryPoints:
+    - mqtt
+  routes:
+    - match: HostSNI(`*`)
+      services:
+        - name: mosquitto
+          port: 1883
+---
+apiVersion: helm.cattle.io/v1
+kind: HelmChartConfig
+metadata:
+  name: traefik
+  namespace: kube-system
+spec:
+  valuesContent: |-
+    ports:
+      mqtt:
+        expose: true
+        exposedPort: 1883
+        port: 1883
+        protocol: TCP

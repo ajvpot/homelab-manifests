@@ -8,11 +8,6 @@ spec:
     ports:
       traefik:
         expose: true
-      mqtt:
-        expose: true
-        exposedPort: 1883
-        port: 1883
-        protocol: TCP
       websecure:
         tls:
           enabled: true

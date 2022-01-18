@@ -29,8 +29,7 @@ jobs:
     - uses: azure/k8s-bake@v1
       with:
         renderEngine: 'helm'
-        helmChart: './compose/seedbox/' 
-        #overrideFiles: './seedbox/values-override.yaml'
+        helmChart: './compose/seedbox/'
         helm-version: 'latest' 
       id: bake_seedbox
     - uses: azure/k8s-bake@v1
@@ -49,4 +48,4 @@ jobs:
         manifests: |
           ${{ steps.kube_manifests.outputs.manifestsBundle }}
           ${{ steps.bake_octoprint.outputs.manifestsBundle }}
-        # ${{ steps.bake_seedbox.outputs.manifestsBundle }}
+          ${{ steps.bake_seedbox.outputs.manifestsBundle }}

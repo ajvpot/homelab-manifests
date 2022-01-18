@@ -111,6 +111,30 @@ spec:
 apiVersion: helm.cattle.io/v1
 kind: HelmChart
 metadata:
+  name: mosquitto
+  namespace: kube-system
+spec:
+  repo: https://k8s-at-home.com/charts/
+  chart: mosquitto
+  targetNamespace: default
+  valuesContent: |-
+    persistence:
+      config:
+        enabled: true
+        storageClass: local-path
+    affinity: &aff
+      nodeAffinity:
+        requiredDuringSchedulingIgnoredDuringExecution:
+          nodeSelectorTerms:
+            - matchExpressions:
+                - key: kubernetes.io/hostname
+                  operator: In
+                  values:
+                    - nixkube
+---
+apiVersion: helm.cattle.io/v1
+kind: HelmChart
+metadata:
   name: thelounge
   namespace: kube-system
 spec:

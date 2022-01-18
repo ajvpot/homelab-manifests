@@ -21,3 +21,4 @@ services:
     labels:
       kompose.service.expose: "print.vanderpot.net"
       kompose.volume.storage-class-name: "local-path"
+      traefik.ingress.kubernetes.io/router.middlewares: default-auth@kubernetescrd

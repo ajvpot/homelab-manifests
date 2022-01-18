@@ -44,8 +44,11 @@ spec:
   targetNamespace: default
   valuesContent: |-
     authentik:
-      postgresql:
-        password: "ThisIsNotASecurePassword"
+      email:
+        host: email-smtp.us-west-2.amazonaws.com
+        port: 465
+        use_ssl: true
+        from: sso@vanderpot.com
     ingress:
       enabled: true
       hosts:
@@ -53,10 +56,8 @@ spec:
           paths:
             - path: "/"
               pathType: Prefix
-    
     postgresql:
       enabled: true
-      postgresqlPassword: "ThisIsNotASecurePassword"
       persistence:
         data:
           enabled: true

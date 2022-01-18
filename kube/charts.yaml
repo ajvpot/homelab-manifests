@@ -138,6 +138,8 @@ spec:
       data:
         enabled: true
         storageClass: local-path
+        accessMode: ReadWriteOnce
+        size: 32Gi
     ingress:
       main:
         enabled: true
@@ -145,5 +147,42 @@ spec:
           - host: nodered.vanderpot.net
             paths:
               - path: /
+---
+apiVersion: helm.cattle.io/v1
+kind: HelmChart
+metadata:
+  name: ser2sock
+  namespace: kube-system
+spec:
+  repo: https://k8s-at-home.com/charts/
+  chart: ser2sock
+  targetNamespace: default
+  valuesContent: |-
+    image:
+      tag: armhf
+    securityContext:
+      privileged: true
+    service:
+      main:
+        enabled: true
+        type: NodePort
+        ports:
+          server:
+            nodePort: 30208
+    persistence:
+      usb:
+        enabled: true
+        type: hostPath
+        hostPath: /dev/ttyUSB0
+        # hostPathType: CharDevice
+    affinity: &aff
+      nodeAffinity:
+        requiredDuringSchedulingIgnoredDuringExecution:
+          nodeSelectorTerms:
+            - matchExpressions:
+                - key: kubernetes.io/hostname
+                  operator: In
+                  values:
+                    - zgateway
 ---
 

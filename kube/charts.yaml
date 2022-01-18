@@ -1,0 +1,148 @@
+---
+apiVersion: helm.cattle.io/v1
+kind: HelmChart
+metadata:
+  name: adguard
+  namespace: kube-system
+spec:
+  repo: https://k8s-at-home.com/charts/
+  chart: adguard-home
+  targetNamespace: default
+  valuesContent: |-
+    affinity: &aff
+      nodeAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+        nodeSelectorTerms:
+          - matchExpressions:
+              - key: kubernetes.io/hostname
+                operator: In
+                values:
+                  - nixkube
+    persistence:
+      config:
+        enabled: true
+        storageClass: local-path
+---
+apiVersion: helm.cattle.io/v1
+kind: HelmChart
+metadata:
+  name: esphome
+  namespace: kube-system
+spec:
+  repo: https://k8s-at-home.com/charts/
+  chart: esphome
+  targetNamespace: default
+  valuesContent: |-
+    persistence:
+      config:
+        enabled: true
+        storageClass: local-path
+    ingress:
+      main:
+        enabled: true
+        hosts:
+          - host: esphome.vanderpot.net
+            paths:
+              - path: /
+---
+apiVersion: helm.cattle.io/v1
+kind: HelmChart
+metadata:
+  name: homeassistant
+  namespace: kube-system
+spec:
+  repo: https://k8s-at-home.com/charts/
+  chart: home-assistant
+  targetNamespace: default
+  valuesContent: |-
+    persistence:
+      config:
+        enabled: true
+        storageClass: local-path
+    ingress:
+      main:
+        enabled: true
+        hosts:
+          - host: hass2.vanderpot.net
+            paths:
+              - path: /
+    securityContext:
+      privileged: true
+    affinity: &aff
+      nodeAffinity:
+        requiredDuringSchedulingIgnoredDuringExecution:
+          nodeSelectorTerms:
+            - matchExpressions:
+                - key: kubernetes.io/hostname
+                  operator: In
+                  values:
+                    - nixkube
+    mariadb:
+      enabled: true
+      persistence:
+        enabled: true
+        stroageClass: local-path
+      affinity: *aff
+    influxdb:
+      enabled: true
+      persistence:
+        enabled: true
+        stroageClass: local-path
+      affinity: *aff
+    addons:
+      codeserver:
+        enabled: true
+        volumeMounts:
+          - name: config
+            mountPath: /config
+        ingress:
+          enabled: true
+          hosts:
+            - host: config.hass2.vanderpot.net
+              paths:
+                - path: /
+---
+apiVersion: helm.cattle.io/v1
+kind: HelmChart
+metadata:
+  name: thelounge
+  namespace: kube-system
+spec:
+  repo: https://k8s-at-home.com/charts/
+  chart: thelounge
+  targetNamespace: default
+  valuesContent: |-
+    persistence:
+      config:
+        enabled: true
+        storageClass: local-path
+    ingress:
+      main:
+        enabled: true
+        hosts:
+          - host: irc.vanderpot.net
+            paths:
+              - path: /
+---
+apiVersion: helm.cattle.io/v1
+kind: HelmChart
+metadata:
+  name: nodered
+  namespace: kube-system
+spec:
+  repo: https://k8s-at-home.com/charts/
+  chart: node-red
+  targetNamespace: default
+  valuesContent: |-
+    persistence:
+      data:
+        enabled: true
+        storageClass: local-path
+    ingress:
+      main:
+        enabled: true
+        hosts:
+          - host: nodered.vanderpot.net
+            paths:
+              - path: /
+---

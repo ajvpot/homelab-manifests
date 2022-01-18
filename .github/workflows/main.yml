@@ -40,12 +40,12 @@ jobs:
       id: bake_octoprint
 
     - name: Get Kube Manifests
-      run: echo "::set-output name=manifestsBundle::$(find ./kube -type f -name '*.yaml')"
+      run: echo "::set-output name=manifestsBundle::$(find ./kube -type f -name '*.yaml' -print0)"
       id: kube_manifests
     - uses: Azure/k8s-deploy@v1
       with:
 
         manifests: |
-        ${{ steps.kube_manifests.outputs.manifestsBundle }}
+         ${{ steps.kube_manifests.outputs.manifestsBundle }}
         # ${{ steps.bake_octoprint.outputs.manifestsBundle }}
         # ${{ steps.bake_seedbox.outputs.manifestsBundle }}

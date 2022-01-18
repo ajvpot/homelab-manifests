@@ -68,6 +68,8 @@ spec:
           - host: hass2.vanderpot.net
             paths:
               - path: /
+        annotations:
+          traefik.ingress.kubernetes.io/router.middlewares: default-auth@kubernetescrd
     securityContext:
       privileged: true
     affinity: &aff

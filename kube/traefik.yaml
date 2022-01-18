@@ -33,6 +33,43 @@ spec:
       # LetsEncrypt Staging
       #- "--certificatesresolvers.letsencrypt.acme.caserver=https://acme-staging-v02.api.letsencrypt.org/directory"
 ---
+apiVersion: helm.cattle.io/v1
+kind: HelmChart
+metadata:
+  name: authentik
+  namespace: kube-system
+spec:
+  repo: https://charts.goauthentik.io
+  chart: authentik
+  targetNamespace: default
+  valuesContent: |-
+    authentik:
+      secret_key: "PleaseGenerateA50CharKey"
+      # This sends anonymous usage-data, stack traces on errors and
+      # performance data to sentry.beryju.org, and is fully opt-in
+      error_reporting:
+        enabled: true
+      postgresql:
+        password: "ThisIsNotASecurePassword"
+    
+    ingress:
+      enabled: true
+      hosts:
+        - host: authentik.vanderpot.net
+          paths:
+            - path: "/"
+              pathType: Prefix
+    
+    postgresql:
+      enabled: true
+      postgresqlPassword: "ThisIsNotASecurePassword"
+      persistence:
+        data:
+          enabled: true
+          storageClass: local-path
+    redis:
+      enabled: true
+---
 apiVersion: traefik.containo.us/v1alpha1
 kind: Middleware
 metadata:
@@ -40,4 +77,17 @@ metadata:
   namespace: default
 spec:
   forwardAuth:
-    address: http://10.10.10.107:9090/validate
+    address: http://ak-outpost-authentik-embedded-outpost.default.svc.cluster.local:9000/akprox/auth/traefik
+    trustForwardHeader: true
+    authResponseHeaders:
+      - X-authentik-username
+      - X-authentik-groups
+      - X-authentik-email
+      - X-authentik-name
+      - X-authentik-uid
+      - X-authentik-jwt
+      - X-authentik-meta-jwks
+      - X-authentik-meta-outpost
+      - X-authentik-meta-provider
+      - X-authentik-meta-app
+      - X-authentik-meta-version

@@ -47,7 +47,7 @@ jobs:
 
         manifests: |
           kube/charts.yaml
-          kube/honmeassistant-externalname.yaml
+          kube/homeassistant-externalname.yaml
           kube/traefik.yaml
           ${{ steps.bake_octoprint.outputs.manifestsBundle }}
         # ${{ steps.bake_seedbox.outputs.manifestsBundle }}

@@ -9,11 +9,12 @@ spec:
     - web
     - websecure
   routes:
-    - match: Host(`hass.vanderpot.net`) || Host(`sso.vanderpot.net`)
+    - match: HostRegexp(`{subdomain:[a-z]+}.vanderpot.net`)
       kind: Rule
       services:
         - name: homeassistant
           port: 80
+      priority: 1
 ---
 apiVersion: traefik.containo.us/v1alpha1
 kind: IngressRoute

@@ -52,7 +52,7 @@ spec:
     ingress:
       enabled: true
       hosts:
-        - host: authentik.vanderpot.net
+        - host: sso.vanderpot.net
           paths:
             - path: "/"
               pathType: Prefix

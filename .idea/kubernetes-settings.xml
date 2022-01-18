@@ -5,6 +5,9 @@
       <SpecSource>
         <option name="pathOrUrl" value="https://raw.githubusercontent.com/containous/traefik-helm-chart/master/traefik/crds/ingressroute.yaml" />
       </SpecSource>
+      <SpecSource>
+        <option name="pathOrUrl" value="https://raw.githubusercontent.com/k3s-io/helm-controller/master/manifests/crd.yaml" />
+      </SpecSource>
     </specSources>
   </component>
 </project>

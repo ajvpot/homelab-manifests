@@ -46,6 +46,6 @@ jobs:
       with:
 
         manifests: |
-          ${{ steps.kube_manifests.outputs.manifestsBundle }}
-          ${{ steps.bake_octoprint.outputs.manifestsBundle }}
-          ${{ steps.bake_seedbox.outputs.manifestsBundle }}
+        ${{ steps.kube_manifests.outputs.manifestsBundle }}
+        # ${{ steps.bake_octoprint.outputs.manifestsBundle }}
+        # ${{ steps.bake_seedbox.outputs.manifestsBundle }}

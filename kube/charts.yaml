@@ -65,7 +65,7 @@ spec:
       main:
         enabled: true
         hosts:
-          - host: hass2.vanderpot.net
+          - host: hass.vanderpot.net
             paths:
               - path: /
         annotations:
@@ -102,7 +102,7 @@ spec:
         ingress:
           enabled: true
           hosts:
-            - host: config.hass2.vanderpot.net
+            - host: config.hass.vanderpot.net
               paths:
                 - path: /
           annotations:
@@ -118,10 +118,18 @@ spec:
   chart: mosquitto
   targetNamespace: default
   valuesContent: |-
-    persistence:
-      config:
+    configmap:
+      configinc:
         enabled: true
-        storageClass: local-path
+        name: 
+        data:
+          mosquitto.conf: ""
+    persistence:
+      configinc:
+        enabled: true
+        type: configMap
+        #todo: hack
+        name: mosquitto-configinc
     affinity: &aff
       nodeAffinity:
         requiredDuringSchedulingIgnoredDuringExecution:
@@ -131,6 +139,20 @@ spec:
                   operator: In
                   values:
                     - nixkube
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRouteTCP
+metadata:
+  name: mosquitto.route
+  namespace: default
+spec:
+  entryPoints:
+    - mqtt
+  routes:
+    - match: HostSNI(`*`)
+      services:
+        - name: mosquitto
+          port: 1883
 ---
 apiVersion: helm.cattle.io/v1
 kind: HelmChart

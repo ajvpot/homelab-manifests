@@ -7,16 +7,17 @@ services:
     ports:
       - "80:80"
     privileged: true
-    #volumes:
-    # - /octoprint:/octoprint
+    volumes:
+      - /octoprint:/octoprint
     # uncomment the lines below to ensure camera streaming is enabled when
     # you add a video device
     environment:
       - OCTOPRINT_PORT=80
       #- ENABLE_MJPG_STREAMER=true
-    #deploy:
-    #  placement:
-    #    constraints:
-    #      - node.hostname == threedprint
+    deploy:
+      placement:
+        constraints:
+          - node.hostname == threedprint
     labels:
       kompose.service.expose: "print.vanderpot.net"
+      kompose.volume.storage-class-name: "local-path"

@@ -7,7 +7,7 @@ then
     sudo mv ./kompose /usr/local/bin/kompose
 fi
 function komposeConvert() {
-	kompose convert -c --volumes hostPath -f $1.yaml
+	kompose convert -c -f $1.yaml
 }
 
 cd compose

@@ -14,6 +14,8 @@ services:
 #    ports:
 #      - 3001:3001
 #    deploy: *masterOnly
+#    labels:
+#      kompose.volume.type: hostPath
 #
 #  rtorrent:
 #    deploy: *masterOnly
@@ -29,6 +31,8 @@ services:
 #      - /zfs/home/torrent/data:/data
 #    ports:
 #      - 6881:6881
+#    labels:
+#      kompose.volume.type: hostPath
 
   radarr:
     deploy: &masterOnly
@@ -48,6 +52,7 @@ services:
     image: linuxserver/radarr
     labels:
       kompose.service.expose: "media.vanderpot.net/radarr"
+      kompose.volume.type: hostPath
 
   sonarr:
     deploy: *masterOnly
@@ -64,4 +69,5 @@ services:
     image: linuxserver/sonarr
     labels:
       kompose.service.expose: "media.vanderpot.net/sonarr"
+      kompose.volume.type: hostPath
 

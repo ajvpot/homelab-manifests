@@ -29,7 +29,7 @@ spec:
       - "--entrypoints.web.http.redirections.entryPoint.scheme=https"
       - "--entrypoints.web.http.redirections.entrypoint.permanent=true"
       
-      - "--entrypoints.websecure.http.middlewares=default-auth@kubernetescrd"
+      #- "--entrypoints.websecure.http.middlewares=default-auth@kubernetescrd"
       # LetsEncrypt Staging
       #- "--certificatesresolvers.letsencrypt.acme.caserver=https://acme-staging-v02.api.letsencrypt.org/directory"
 ---
@@ -39,5 +39,5 @@ metadata:
   name: auth
   namespace: default
 spec:
-  basicAuth:
-    secret: authsecret
+  forwardAuth:
+    address: http://10.10.10.107:9090/validate

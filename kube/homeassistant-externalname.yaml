@@ -11,6 +11,9 @@ spec:
       services:
         - name: homeassistant
           port: 80
+      middlewares:
+        - name: auth
+          namespace: default
       priority: 1
 ---
 apiVersion: traefik.containo.us/v1alpha1

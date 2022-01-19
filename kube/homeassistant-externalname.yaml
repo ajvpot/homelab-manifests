@@ -11,6 +11,11 @@ spec:
       services:
         - name: homeassistant
           port: 9002
+    - match: Host(`bw.vanderpot.net`)
+      kind: Rule
+      services:
+        - name: homeassistant
+          port: 7277
     - match: Host(`old.hass.vanderpot.net`)
       kind: Rule
       services:

@@ -17,6 +17,16 @@ spec:
         exposedPort: 1883
         port: 1883
         protocol: TCP
+      dnstcp:
+        expose: true
+        exposedPort: 53
+        port: 1053
+        protocol: TCP
+      dnsudp:
+        expose: true
+        exposedPort: 53
+        port: 1053
+        protocol: UDP
     persistence:
       enabled: true
       name: data

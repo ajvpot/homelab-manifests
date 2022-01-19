@@ -2,30 +2,6 @@
 apiVersion: helm.cattle.io/v1
 kind: HelmChart
 metadata:
-  name: adguard
-  namespace: kube-system
-spec:
-  repo: https://k8s-at-home.com/charts/
-  chart: adguard-home
-  targetNamespace: default
-  valuesContent: |-
-    affinity: &aff
-      nodeAffinity:
-      requiredDuringSchedulingIgnoredDuringExecution:
-        nodeSelectorTerms:
-          - matchExpressions:
-              - key: kubernetes.io/hostname
-                operator: In
-                values:
-                  - nixkube
-    persistence:
-      config:
-        enabled: true
-        storageClass: local-path
----
-apiVersion: helm.cattle.io/v1
-kind: HelmChart
-metadata:
   name: esphome
   namespace: kube-system
 spec:

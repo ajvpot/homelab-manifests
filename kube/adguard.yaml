@@ -1,0 +1,66 @@
+---
+apiVersion: helm.cattle.io/v1
+kind: HelmChart
+metadata:
+  name: adguard
+  namespace: kube-system
+spec:
+  repo: https://k8s-at-home.com/charts/
+  chart: adguard-home
+  targetNamespace: default
+  valuesContent: |-
+    affinity: &aff
+      nodeAffinity:
+        requiredDuringSchedulingIgnoredDuringExecution:
+          nodeSelectorTerms:
+            - matchExpressions:
+                - key: kubernetes.io/hostname
+                  operator: In
+                  values:
+                    - nixkube
+    persistence:
+      config:
+        enabled: true
+        storageClass: local-path
+    service:
+      dns-tcp:
+        type: ClusterIP
+      dns-udp:
+        type: ClusterIP
+    ingress:
+      main:
+        enabled: true
+        hosts:
+          - host: adguard.vanderpot.net
+            paths:
+              - path: /
+        annotations:
+          traefik.ingress.kubernetes.io/router.middlewares: default-auth@kubernetescrd
+
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRouteTCP
+metadata:
+  name: adguard-tcp-route
+  namespace: default
+spec:
+  entryPoints:
+    - dnstcp
+  routes:
+    - match: HostSNI(`*`)
+      services:
+        - name: adguard-adguard-home-dns-tcp
+          port: 53
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRouteUDP
+metadata:
+  name: adguard-udp-route
+  namespace: default
+spec:
+  entryPoints:
+    - dnsudp
+  routes:
+    - services:
+        - name: adguard-adguard-home-dns-udp
+          port: 53

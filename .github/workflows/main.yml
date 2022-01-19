@@ -44,10 +44,9 @@ jobs:
       id: kube_manifests
     - uses: Azure/k8s-deploy@v1
       with:
-
         manifests: |
+          ${{ steps.bake_octoprint.outputs.manifestsBundle }}
         #  kube/charts.yaml
         #  kube/homeassistant-externalname.yaml
         #  kube/traefik.yaml
-          ${{ steps.bake_octoprint.outputs.manifestsBundle }}
         # ${{ steps.bake_seedbox.outputs.manifestsBundle }}

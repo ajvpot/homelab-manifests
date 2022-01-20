@@ -41,6 +41,7 @@ spec:
       kind: Rule
       services:
         - name: vaultwarden
+          port: 80
       middlewares:
         - name: auth
           namespace: default

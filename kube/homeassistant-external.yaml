@@ -16,6 +16,15 @@ spec:
       services:
         - name: homeassistant
           port: 7277
+    - match: Host(`pve.vanderpot.net`)
+      kind: Rule
+      services:
+        - name: pve
+          port: 8006
+          scheme: https
+      middlewares:
+        - name: auth
+          namespace: default
     - match: Host(`old.hass.vanderpot.net`)
       kind: Rule
       services:
@@ -80,6 +89,19 @@ spec:
   ports:
     - protocol: TCP
       port: 443
+      name: https
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: pve
+  namespace: default
+spec:
+  externalName: 10.10.10.99
+  type: ExternalName
+  ports:
+    - protocol: TCP
+      port: 8006
       name: https
 ---
 apiVersion: v1

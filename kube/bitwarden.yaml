@@ -1,0 +1,47 @@
+---
+apiVersion: helm.cattle.io/v1
+kind: HelmChart
+metadata:
+  name: vaultwarden
+  namespace: kube-system
+spec:
+  repo: https://k8s-at-home.com/charts/
+  chart: vaultwarden
+  targetNamespace: default
+  valuesContent: |-
+    ingress:
+      main:
+        enabled: true
+        hosts:
+          - host: bw.vanderpot.net
+            paths:
+              - path: /
+    persistence:
+      config:
+        enabled: true
+        storageClass: local-path
+    affinity: &aff
+      nodeAffinity:
+        requiredDuringSchedulingIgnoredDuringExecution:
+          nodeSelectorTerms:
+            - matchExpressions:
+                - key: kubernetes.io/hostname
+                  operator: In
+                  values:
+                    - nixkube
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: vaultwarden-admin
+  namespace: default
+spec:
+  routes:
+    - match: Host(`bw.vanderpot.net`) && PathPrefix(`/admin`)
+      kind: Rule
+      services:
+        - name: vaultwarden
+      middlewares:
+        - name: auth
+          namespace: default
+      priority: 100

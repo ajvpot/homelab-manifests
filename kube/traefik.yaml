@@ -84,6 +84,7 @@ spec:
       enabled: true
     env:
       AUTHENTIK_DEFAULT_USER_CHANGE_USERNAME: false
+      AUTHENTIK_FOOTER_LINKS: '[{"href": "about:blank","name": ""}]'
 ---
 apiVersion: traefik.containo.us/v1alpha1
 kind: Middleware

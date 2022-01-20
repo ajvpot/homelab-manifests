@@ -29,20 +29,3 @@ spec:
                   operator: In
                   values:
                     - nixkube
----
-apiVersion: traefik.containo.us/v1alpha1
-kind: IngressRoute
-metadata:
-  name: vaultwarden-admin
-  namespace: default
-spec:
-  routes:
-    - match: Host(`bw.vanderpot.net`) && PathPrefix(`/admin`)
-      kind: Rule
-      services:
-        - name: vaultwarden
-          port: 80
-      middlewares:
-        - name: auth
-          namespace: default
-      priority: 100

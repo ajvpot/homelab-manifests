@@ -59,16 +59,25 @@ spec:
                     - nixkube
     mariadb:
       enabled: true
-      persistence:
-        enabled: true
-        storageClass: local-path
-      affinity: *aff
+      primary:
+        persistence:
+          enabled: true
+          storageClass: local-path
+          size: 256Gi
+        auth:
+          database: homeassistant
+          username: homeassistant
+          password: password
+          rootPassword: home-assistantrootpass
+        affinity: *aff
     influxdb:
       enabled: true
       persistence:
         enabled: true
         storageClass: local-path
-      affinity: *aff
+        size: 200Gi
+      influxdb:
+        affinity: *aff
     addons:
       codeserver:
         enabled: true

@@ -11,20 +11,6 @@ spec:
       services:
         - name: homeassistant
           port: 9002
-    - match: Host(`bw.vanderpot.net`)
-      kind: Rule
-      services:
-        - name: homeassistant
-          port: 7277
-    - match: Host(`bw.vanderpot.net`) && PathPrefix(`/admin/`)
-      kind: Rule
-      services:
-        - name: homeassistant
-          port: 7277
-      middlewares:
-        - name: auth
-          namespace: default
-      priority: 100
     - match: Host(`pve.vanderpot.net`)
       kind: Rule
       services:

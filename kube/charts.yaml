@@ -185,7 +185,7 @@ spec:
       main:
         enabled: true
         hosts:
-          - host: bw2.vanderpot.net
+          - host: bw.vanderpot.net
             paths:
               - path: /
         annotations:

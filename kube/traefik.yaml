@@ -5,6 +5,9 @@ metadata:
   namespace: kube-system
 spec:
   valuesContent: |-
+    envFrom:
+      - configMapRef:
+          name: traefik-env
     ports:
       traefik:
         expose: true
@@ -12,6 +15,10 @@ spec:
         tls:
           enabled: true
           certResolver: letsencrypt
+          domains:
+            - main: vanderpot.net
+              sans:
+                - "*.vanderpot.net"
       mqtt:
         expose: true
         exposedPort: 1883
@@ -40,7 +47,9 @@ spec:
       - "--serverstransport.insecureskipverify=true"
     
       - "--certificatesresolvers.letsencrypt.acme.storage=/data/acme.json"
-      - "--certificatesresolvers.letsencrypt.acme.tlschallenge=true"
+      #- "--certificatesresolvers.letsencrypt.acme.tlschallenge=true"
+      - "--certificatesresolvers.letsencrypt.acme.dnschallenge=true"
+      - "--certificatesresolvers.letsencrypt.acme.dnschallenge.provider=cloudflare"
       - "--certificatesresolvers.letsencrypt.acme.email=alex@vanderpot.com"
     
       - "--entrypoints.web.http.redirections.entryPoint.to=:443"

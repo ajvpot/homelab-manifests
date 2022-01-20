@@ -108,4 +108,41 @@ spec:
                   values:
                     - nixkube
 ---
-
+apiVersion: helm.cattle.io/v1
+kind: HelmChart
+metadata:
+  name: torrent
+  namespace: kube-system
+spec:
+  repo: https://k8s-at-home.com/charts/
+  chart: deluge
+  targetNamespace: default
+  valuesContent: |-
+    ingress:
+      main:
+        enabled: true
+        hosts:
+          - host: dl.vanderpot.net
+            paths:
+              - path: /
+        annotations:
+          traefik.ingress.kubernetes.io/router.middlewares: default-auth@kubernetescrd
+    persistence:
+      config:
+        enabled: true
+        type: hostPath
+        hostPath: /zfs/home/torrent/config
+      downloads:
+        enabled: true
+        type: hostPath
+        hostPath: /zfs/home/torrent/data
+    affinity: &aff
+      nodeAffinity:
+        requiredDuringSchedulingIgnoredDuringExecution:
+          nodeSelectorTerms:
+            - matchExpressions:
+                - key: kubernetes.io/hostname
+                  operator: In
+                  values:
+                    - nixkube
+---

@@ -1,0 +1,37 @@
+---
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: ddclient-job
+  namespace: default
+  labels:
+    owner: ddclient
+spec:
+  concurrencyPolicy: Forbid
+  failedJobsHistoryLimit: 5
+  successfulJobsHistoryLimit: 5
+  startingDeadlineSeconds: 60
+  # At every 5th minute.
+  schedule: "*/5 * * * *"
+  jobTemplate:
+    metadata:
+      name: ddclient-job
+      labels:
+        owner: ddclient
+    spec:
+      activeDeadlineSeconds: 240
+      backoffLimit: 3
+      template:
+        metadata:
+          name: ddclient-job-pod
+          labels:
+            owner: ddclient
+        spec:
+          containers:
+            - name: ddclient-job-container
+              image: zfschuindt/ddclient:latest
+              command: ["bash", "-c", "/ddclient/entrypoint.sh"]
+              envFrom:
+                - configMapRef:
+                    name: ddclient-config-map
+          restartPolicy: OnFailure

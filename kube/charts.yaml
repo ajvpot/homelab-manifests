@@ -146,3 +146,28 @@ spec:
                   values:
                     - nixkube
 ---
+apiVersion: helm.cattle.io/v1
+kind: HelmChart
+metadata:
+  name: dashboard
+  namespace: kube-system
+spec:
+  repo: https://kubernetes.github.io/dashboard/
+  chart: kubernetes-dashboard
+  targetNamespace: default
+  valuesContent: |-
+    ingress:
+      enabled: true
+      hosts:
+        - kube.vanderpot.net
+      paths:
+        - /
+      annotations:
+        traefik.ingress.kubernetes.io/router.middlewares: default-auth@kubernetescrd
+    extraArgs:
+      - --enable-skip-login
+      - --disable-settings-authorizer
+    rbac:
+      create: true
+      clusterReadOnlyRole: true
+---

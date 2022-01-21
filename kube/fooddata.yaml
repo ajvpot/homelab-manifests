@@ -1,0 +1,34 @@
+#apiVersion: helm.cattle.io/v1
+#kind: HelmChart
+#metadata:
+#  name: fooddata
+#  namespace: kube-system
+#spec:
+#  repo: https://2start.github.io/hasura-helm-chart/
+#  chart: hasura
+#  targetNamespace: default
+#  valuesContent: |-
+#    postgresql:
+#      enabled: true
+#      postgresqlDatabase: postgres
+#      postgresqlPassword: postgrespassword
+#      image:
+#        tag: 12
+#    global:
+#      ingress:
+#        domain: vanderpot.net
+#    ingress:
+#      subdomain: food
+#    devMode: true
+#    console:
+#      enabled: true
+#    adminSecret: ilikefood123 # sue me
+#    affinity: &aff
+#      nodeAffinity:
+#        requiredDuringSchedulingIgnoredDuringExecution:
+#          nodeSelectorTerms:
+#            - matchExpressions:
+#                - key: kubernetes.io/hostname
+#                  operator: In
+#                  values:
+#                    - nixkube

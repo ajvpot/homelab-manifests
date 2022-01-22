@@ -22,32 +22,8 @@ jobs:
       with:
         kubeconfig: ${{ secrets.KUBE_CONFIG }}
 
-
     - name: Generate
       run: ./generate.sh
-    # todo switch bake to helm intall for rollback/delete
-    - uses: azure/k8s-bake@v1
-      with:
-        renderEngine: 'helm'
-        helmChart: './compose/seedbox/'
-        helm-version: 'latest' 
-      id: bake_seedbox
-    - uses: azure/k8s-bake@v1
-      with:
-        renderEngine: 'helm'
-        helmChart: './compose/octoprint/'
-        helm-version: 'latest'
-      id: bake_octoprint
 
-    - name: Get Kube Manifests
-      run: echo "::set-output name=manifestsBundle::$(find ./kube -type f -name '*.yaml')"
-      id: kube_manifests
-    - uses: Azure/k8s-deploy@v1
-      with:
-        manifests: |
-          kube
-          ${{ steps.bake_octoprint.outputs.manifestsBundle }}
-        #  kube/charts.yaml
-        #  kube/homeassistant-externalname.yaml
-        #  kube/traefik.yaml
-        # ${{ steps.bake_seedbox.outputs.manifestsBundle }}
+    - name: Apply
+      run: kubectl apply -f kube

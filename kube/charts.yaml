@@ -98,6 +98,24 @@ spec:
         enabled: true
         type: hostPath
         hostPath: /zfs/home/alex/data
+    service:
+      bt:
+        enabled: true
+        primary: false
+        type: NodePort
+        ports:
+          tcp:
+            enabled: true
+            protocol: TCP
+            port: 30102
+            nodePort: 30102
+            targetPort: 30102
+          udp:
+            enabled: true
+            protocol: UDP
+            port: 30102
+            nodePort: 30102
+            targetPort: 30102
     affinity: &aff
       nodeAffinity:
         requiredDuringSchedulingIgnoredDuringExecution:
@@ -136,6 +154,24 @@ spec:
         enabled: true
         type: hostPath
         hostPath: /zfs/home/torrent/data
+    service:
+      bt:
+        enabled: true
+        primary: false
+        type: NodePort
+        ports:
+          tcp:
+            enabled: true
+            protocol: TCP
+            port: 30101
+            nodePort: 30101
+            targetPort: 30101
+          udp:
+            enabled: true
+            protocol: UDP
+            port: 30101
+            nodePort: 30101
+            targetPort: 30101
     affinity: &aff
       nodeAffinity:
         requiredDuringSchedulingIgnoredDuringExecution:

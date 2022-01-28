@@ -6,7 +6,7 @@ metadata:
   namespace: default
 spec:
   routes:
-    - match: Host(`food.vanderpot.net`)
+    - match: Host(`old.food.vanderpot.net`)
       kind: Rule
       services:
         - name: homeassistant

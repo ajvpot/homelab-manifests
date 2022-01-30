@@ -102,7 +102,8 @@ spec:
       bt:
         enabled: true
         primary: false
-        type: NodePort
+        type: LoadBalancer
+        externalTrafficPolicy: Local
         ports:
           tcp:
             enabled: true
@@ -126,6 +127,68 @@ spec:
                   values:
                     - nixkube
 ---
+apiVersion: helm.cattle.io/v1
+kind: HelmChart
+metadata:
+  name: torrent-alex-transmission
+  namespace: kube-system
+spec:
+  repo: https://k8s-at-home.com/charts/
+  chart: transmission
+  targetNamespace: default
+  valuesContent: |-
+    env:
+      TRANSMISSION_RPC_WHITELIST_ENABLED: false
+      TRANSMISSION_RPC_WHITELIST: 0.0.0.0/0
+      TRANSMISSION_DOWNLOAD_DIR: /downloads
+    ingress:
+      main:
+        enabled: true
+        hosts:
+          - host: dl2.vanderpot.net
+            paths:
+              - path: /
+        annotations:
+          traefik.ingress.kubernetes.io/router.middlewares: default-auth@kubernetescrd
+    persistence:
+      config:
+        enabled: true
+        type: hostPath
+        hostPath: /zfs/home/alex/config
+      downloads:
+        enabled: true
+        type: hostPath
+        hostPath: /zfs/home/alex/data
+    service:
+      bt:
+        enabled: true
+        primary: false
+        type: LoadBalancer
+        externalTrafficPolicy: Local
+        ports:
+          tcp:
+            enabled: true
+            protocol: TCP
+            port: 30103
+            nodePort: 30103
+            targetPort: 30103
+          udp:
+            enabled: true
+            protocol: UDP
+            port: 30103
+            nodePort: 30103
+            targetPort: 30103
+    affinity: &aff
+      nodeAffinity:
+        requiredDuringSchedulingIgnoredDuringExecution:
+          nodeSelectorTerms:
+            - matchExpressions:
+                - key: kubernetes.io/hostname
+                  operator: In
+                  values:
+                    - nixkube
+---
+
 apiVersion: helm.cattle.io/v1
 kind: HelmChart
 metadata:
@@ -158,7 +221,8 @@ spec:
       bt:
         enabled: true
         primary: false
-        type: NodePort
+        type: LoadBalancer
+        externalTrafficPolicy: Local
         ports:
           tcp:
             enabled: true

@@ -5,6 +5,9 @@ metadata:
   namespace: kube-system
 spec:
   valuesContent: |-
+    service:
+      spec:
+        externalTrafficPolicy: Local
     envFrom:
       - configMapRef:
           name: traefik-env

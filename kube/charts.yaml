@@ -179,7 +179,7 @@ spec:
       downloads:
         enabled: true
         type: hostPath
-        hostPath: /zfs/home/torrent/data
+        hostPath: /bulk/home/torrent/data
         mountPath: /downloads
     affinity: &aff
       nodeAffinity:
@@ -209,16 +209,30 @@ spec:
       schedule2 = watch_start, 10, 10, ((load.start_verbose, (cat, (cfg.watch), "start/*.torrent")))
       dht.add_bootstrap = dht.transmissionbt.com:6881
       dht.add_bootstrap = dht.libtorrent.org:25401
-      throttle.max_uploads.set = 100
-      throttle.max_uploads.global.set = 1000
-      throttle.min_peers.normal.set = 128
-      throttle.max_peers.normal.set = 512
-      throttle.min_peers.seed.set = 128
-      throttle.max_peers.seed.set = 512
+
+      # Maximum number of simultaneous downloads and uploads slots (global slots!) (`max_downloads_global`, `max_uploads_global`)
+      throttle.max_downloads.global.set = 3000
+      throttle.max_uploads.global.set   = 3000
+      
+      # Maximum and minimum number of peers to connect to per torrent while downloading (`min_peers`, `max_peers`) Default: `100` and `200` respectively
+      throttle.min_peers.normal.set = 256
+      throttle.max_peers.normal.set = 1024
+      
+      # Same as above but for seeding completed torrents (seeds per torrent), `-1` for same as downloading (`min_peers_seed`, `max_peers_seed`) Default: `-1` for both
+      throttle.min_peers.seed.set = 32
+      throttle.max_peers.seed.set = 128
+      
+      # Maximum number of simultaneous downloads and uploads slots per torrent (`max_uploads`) Default: `50` for both
+      throttle.max_downloads.set = 512
+      throttle.max_uploads.set = 512
       trackers.numwant.set = 256
       network.port_range.set = 30104-30104
       network.max_open_files.set = 16384
-      network.max_open_sockets.set = 8192
+      network.max_open_sockets.set = 32748
+    
+      network.receive_buffer.size.set = 128M
+      network.send_buffer.size.set    = 128M
+    
       pieces.memory.max.set = 8192M
       session.path.set = (cat, (cfg.session))
       directory.default.set = (cat, (cfg.download))

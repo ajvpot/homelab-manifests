@@ -11,8 +11,7 @@ spec:
   failedJobsHistoryLimit: 5
   successfulJobsHistoryLimit: 1
   startingDeadlineSeconds: 60
-  # At every 5th minute.
-  schedule: "*/5 * * * *"
+  schedule: "1 1 * * *"
   jobTemplate:
     metadata:
       name: ddclient-job

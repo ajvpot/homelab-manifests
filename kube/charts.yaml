@@ -24,6 +24,24 @@ spec:
 apiVersion: helm.cattle.io/v1
 kind: HelmChart
 metadata:
+  name: librespeed
+  namespace: kube-system
+spec:
+  repo: https://k8s-at-home.com/charts/
+  chart: librespeed
+  targetNamespace: default
+  valuesContent: |-
+    ingress:
+      main:
+        enabled: true
+        hosts:
+          - host: speed.vanderpot.net
+            paths:
+              - path: /
+---
+apiVersion: helm.cattle.io/v1
+kind: HelmChart
+metadata:
   name: ytdl
   namespace: kube-system
 spec:
@@ -97,7 +115,7 @@ spec:
       downloads:
         enabled: true
         type: hostPath
-        hostPath: /zfs/home/alex/data
+        hostPath: /bulk/home/alex/data
     service:
       bt:
         enabled: true
@@ -165,7 +183,7 @@ spec:
       main:
         enabled: true
         hosts:
-          - host: dl2.vanderpot.net
+          - host: flood.vanderpot.net
             paths:
               - path: /
         annotations:
@@ -211,8 +229,8 @@ spec:
       dht.add_bootstrap = dht.libtorrent.org:25401
 
       # Maximum number of simultaneous downloads and uploads slots (global slots!) (`max_downloads_global`, `max_uploads_global`)
-      throttle.max_downloads.global.set = 3000
-      throttle.max_uploads.global.set   = 3000
+      throttle.max_downloads.global.set = 4096
+      throttle.max_uploads.global.set   = 4096
       
       # Maximum and minimum number of peers to connect to per torrent while downloading (`min_peers`, `max_peers`) Default: `100` and `200` respectively
       throttle.min_peers.normal.set = 256
@@ -233,7 +251,7 @@ spec:
       network.receive_buffer.size.set = 128M
       network.send_buffer.size.set    = 128M
     
-      pieces.memory.max.set = 8192M
+      pieces.memory.max.set = 16384M
       session.path.set = (cat, (cfg.session))
       directory.default.set = (cat, (cfg.download))
       log.execute = (cat, (cfg.logs), "execute.log")

@@ -1,0 +1,62 @@
+---
+apiVersion: helm.cattle.io/v1
+kind: HelmChart
+metadata:
+  name: prometheus
+  namespace: kube-system
+spec:
+  repo: https://prometheus-community.github.io/helm-charts
+  chart: kube-prometheus-stack
+  targetNamespace: default
+  valuesContent: |-
+    alertmanager:
+      ingress:
+        enabled: true
+        annotations:
+          traefik.ingress.kubernetes.io/router.middlewares: default-auth@kubernetescrd
+        hosts:
+          - alertmanager.vanderpot.net
+        paths:
+          - /
+      alertmanagerSpec:
+        storage: 
+          volumeClaimTemplate:
+            spec:
+              storageClassName: local-path
+              accessModes: ["ReadWriteOnce"]
+              resources:
+                requests:
+                  storage: 50Gi
+    grafana:
+    # grafana auth
+      ingress:
+        enabled: true
+        annotations:
+          traefik.ingress.kubernetes.io/router.middlewares: default-auth@kubernetescrd
+        hosts:
+          - grafana.vanderpot.net
+        path: /
+      persistence:
+        type: pvc
+        enabled: true
+        storageClassName: local-path
+    prometheus:
+      ingress:
+        enabled: true
+        annotations:
+          traefik.ingress.kubernetes.io/router.middlewares: default-auth@kubernetescrd
+        hosts:
+          - prometheus.vanderpot.net
+        paths:
+          - /
+      prometheusSpec:
+        storage: 
+          volumeClaimTemplate:
+            spec:
+              storageClassName: local-path
+              accessModes: ["ReadWriteOnce"]
+              resources:
+                requests:
+                  storage: 50Gi
+
+---

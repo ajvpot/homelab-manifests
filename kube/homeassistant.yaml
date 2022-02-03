@@ -137,13 +137,6 @@ spec:
       tag: armhf
     securityContext:
       privileged: true
-    service:
-      main:
-        enabled: true
-        type: NodePort
-        ports:
-          server:
-            nodePort: 30208
     persistence:
       usb:
         enabled: true
@@ -159,4 +152,37 @@ spec:
                   operator: In
                   values:
                     - zgateway
+---
+apiVersion: helm.cattle.io/v1
+kind: HelmChart
+metadata:
+  name: zigbee2mqtt
+  namespace: kube-system
+spec:
+  repo: https://k8s-at-home.com/charts/
+  chart: zigbee2mqtt
+  targetNamespace: default
+  valuesContent: |-
+    persistence:
+      data:
+        enabled: true
+        storageClass: local-path
+        accessMode: ReadWriteOnce
+        size: 1Gi
+    config:
+      homeassistant: true
+      permit_join: false
+      mqtt:
+        server: "mqtt://mosquitto"
+      serial:
+        port: "tcp://ser2sock:10000"
+    affinity: &aff
+      nodeAffinity:
+        requiredDuringSchedulingIgnoredDuringExecution:
+          nodeSelectorTerms:
+            - matchExpressions:
+                - key: kubernetes.io/hostname
+                  operator: In
+                  values:
+                    - nixkube
 ---

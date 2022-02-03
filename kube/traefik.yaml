@@ -82,7 +82,7 @@ spec:
     ingress:
       enabled: true
       hosts:
-        - host: sso.vanderpot.net
+        - host: apps.vanderpot.net
           paths:
             - path: "/"
               pathType: Prefix

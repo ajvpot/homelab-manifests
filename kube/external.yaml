@@ -112,3 +112,22 @@ spec:
       port: 80
       name: http
 
+
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: traefik-dashboard
+  namespace: default
+spec:
+  routes:
+    - match: Host(`traefik.vanderpot.net`) # Hostname to match
+      kind: Rule
+      services: # Service to redirect requests to
+        - name: api@internal # Special service created by Traefik pod
+          kind: TraefikService
+      middlewares:
+        - name: auth
+          namespace: default
+  tls:
+    secretName: vanderpot-net-tls

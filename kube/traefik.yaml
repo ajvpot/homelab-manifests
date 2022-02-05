@@ -5,6 +5,9 @@ metadata:
   namespace: kube-system
 spec:
   valuesContent: |-
+    ingressRoute:
+      dashboard:
+        enabled: false
     service:
       spec:
         externalTrafficPolicy: Local
@@ -17,7 +20,7 @@ spec:
       websecure:
         tls:
           enabled: true
-          certResolver: letsencrypt
+          #certResolver: letsencrypt
           domains:
             - main: vanderpot.net
               sans:
@@ -49,11 +52,11 @@ spec:
     
       - "--serverstransport.insecureskipverify=true"
     
-      - "--certificatesresolvers.letsencrypt.acme.storage=/data/acme.json"
+      #- "--certificatesresolvers.letsencrypt.acme.storage=/data/acme.json"
       #- "--certificatesresolvers.letsencrypt.acme.tlschallenge=true"
-      - "--certificatesresolvers.letsencrypt.acme.dnschallenge=true"
-      - "--certificatesresolvers.letsencrypt.acme.dnschallenge.provider=cloudflare"
-      - "--certificatesresolvers.letsencrypt.acme.email=alex@vanderpot.com"
+      #- "--certificatesresolvers.letsencrypt.acme.dnschallenge=true"
+      #- "--certificatesresolvers.letsencrypt.acme.dnschallenge.provider=cloudflare"
+      #- "--certificatesresolvers.letsencrypt.acme.email=alex@vanderpot.com"
     
       - "--entrypoints.web.http.redirections.entryPoint.to=:443"
       - "--entrypoints.web.http.redirections.entryPoint.scheme=https"
@@ -128,3 +131,78 @@ spec:
       - X-authentik-meta-provider
       - X-authentik-meta-app
       - X-authentik-meta-version
+---
+apiVersion: helm.cattle.io/v1
+kind: HelmChart
+metadata:
+  name: cert-manager
+  namespace: kube-system
+spec:
+  repo: https://charts.jetstack.io
+  chart: cert-manager
+  targetNamespace: kube-system
+  valuesContent: |-
+    installCRDs: true
+    prometheus:
+      servicemonitor:
+        enabled: true
+---
+apiVersion: cert-manager.io/v1
+kind: ClusterIssuer
+metadata:
+  name: letsencrypt-staging
+  namespace: kube-system
+spec:
+  acme:
+    email: alex@vanderpot.com
+    server: https://acme-staging-v02.api.letsencrypt.org/directory
+    privateKeySecretRef:
+      name: le-staging-account-key
+    solvers:
+      - dns01:
+          cloudflare:
+            email: alexjvanderpotwebdesign@gmail.com
+            apiTokenSecretRef:
+              name: cloudflare-api-token-secret
+              key: api-token
+        selector:
+          dnsNames:
+            - 'vanderpot.net'
+            - '*.vanderpot.net'
+---
+apiVersion: cert-manager.io/v1
+kind: ClusterIssuer
+metadata:
+  name: letsencrypt
+  namespace: kube-system
+spec:
+  acme:
+    email: alex@vanderpot.com
+    server: https://acme-v02.api.letsencrypt.org/directory
+    privateKeySecretRef:
+      name: le-account-key
+    solvers:
+      - dns01:
+          cloudflare:
+            email: alexjvanderpotwebdesign@gmail.com
+            apiTokenSecretRef:
+              name: cloudflare-api-token-secret
+              key: api-token
+        selector:
+          dnsNames:
+            - 'vanderpot.net'
+            - '*.vanderpot.net'
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: vanderpot-net
+  namespace: default
+spec:
+  secretName: vanderpot-net-tls
+  issuerRef:
+    name: letsencrypt
+    kind: ClusterIssuer
+  dnsNames:
+    - vanderpot.net
+    - '*.vanderpot.net'

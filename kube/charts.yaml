@@ -117,10 +117,21 @@ spec:
         type: hostPath
         hostPath: /bulk/home/alex/data
     service:
+      rpc:
+        enabled: true
+        primary: false
+        type: NodePort
+        ports:
+          rpc:
+            enabled: true
+            protocol: TCP
+            port: 58846
+            targetPort: 58846
+            nodePort: 30846
       bt:
         enabled: true
         primary: false
-        type: LoadBalancer
+        type: NodePort
         externalTrafficPolicy: Local
         ports:
           tcp:

@@ -17,6 +17,7 @@ spec:
     ports:
       metrics:
         expose: true
+        exposedPort: 9001
       websecure:
         tls:
           enabled: true

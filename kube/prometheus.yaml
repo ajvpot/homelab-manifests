@@ -9,6 +9,16 @@ spec:
   chart: kube-prometheus-stack
   targetNamespace: default
   valuesContent: |-
+    defaultRules:
+      rules:
+        kubeProxy: false
+        kubeScheduler: false
+    kubeControllerManager:
+      enabled: false
+    kubeScheduler:
+      enabled: false
+    kubeProxy:
+      enabled: false
     alertmanager:
       ingress:
         enabled: true

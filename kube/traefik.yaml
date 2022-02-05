@@ -15,7 +15,7 @@ spec:
       - configMapRef:
           name: traefik-env
     ports:
-      traefik:
+      metrics:
         expose: true
       websecure:
         tls:
@@ -76,6 +76,9 @@ spec:
   chart: authentik
   targetNamespace: default
   valuesContent: |-
+    prometheus:
+      serviceMonitor:
+        create: true
     authentik:
       email:
         host: email-smtp.us-west-2.amazonaws.com

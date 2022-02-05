@@ -50,6 +50,7 @@ spec:
         paths:
           - /
       prometheusSpec:
+        scrapeInterval: 15s
         storage: 
           volumeClaimTemplate:
             spec:
@@ -64,7 +65,7 @@ apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
 metadata:
   name: traefikmonitor
-  namespace: default
+  namespace: kube-system
   labels:
     app: traefik
     release: prometheus-stack
@@ -78,6 +79,6 @@ spec:
     matchNames:
       - kube-system
   endpoints:
-    - port: traefik
+    - port: metrics
       path: /metrics
 ---

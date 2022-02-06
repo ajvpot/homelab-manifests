@@ -64,7 +64,7 @@ spec:
         enabled: true
         data:
           server.cfg: |
-            hostname "aVo | Team Avolition Public [100 tick]"
+            hostname "aVo | Team Avolition [100 tick] [US-West]"
             // basic resets
             sv_gravity 600
             sv_airaccelerate 10

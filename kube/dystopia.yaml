@@ -123,7 +123,7 @@ spec:
         enabled: true
         type: configMap
         subPath: admins.cfg
-        mountPath: /data/addons/sourcemod/configs/admins.cfg
+        mountPath: /data/dystopia/addons/sourcemod/configs/admins.cfg
         name: "{{.Release.Name}}-nullserv-config"
     affinity: &aff
       nodeAffinity:

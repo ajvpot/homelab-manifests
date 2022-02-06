@@ -49,23 +49,14 @@ spec:
     additionalArguments:
       - "--providers.kubernetescrd.allowexternalnameservices=true"
       - "--providers.kubernetescrd.allowcrossnamespace=true"
-      - "--providers.kubernetesingress.allowexternalnameservices=true"
-    
+      - "--providers.kubernetesingress.allowexternalnameservices=true"    
       - "--serverstransport.insecureskipverify=true"
-    
-      #- "--certificatesresolvers.letsencrypt.acme.storage=/data/acme.json"
-      #- "--certificatesresolvers.letsencrypt.acme.tlschallenge=true"
-      #- "--certificatesresolvers.letsencrypt.acme.dnschallenge=true"
-      #- "--certificatesresolvers.letsencrypt.acme.dnschallenge.provider=cloudflare"
-      #- "--certificatesresolvers.letsencrypt.acme.email=alex@vanderpot.com"
-    
+      
       - "--entrypoints.web.http.redirections.entryPoint.to=:443"
       - "--entrypoints.web.http.redirections.entryPoint.scheme=https"
       - "--entrypoints.web.http.redirections.entrypoint.permanent=true"
       
       #- "--entrypoints.websecure.http.middlewares=default-auth@kubernetescrd"
-      # LetsEncrypt Staging
-      #- "--certificatesresolvers.letsencrypt.acme.caserver=https://acme-staging-v02.api.letsencrypt.org/directory"
 ---
 apiVersion: helm.cattle.io/v1
 kind: HelmChart

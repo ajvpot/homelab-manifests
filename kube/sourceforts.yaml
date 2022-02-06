@@ -1,0 +1,77 @@
+apiVersion: helm.cattle.io/v1
+kind: HelmChart
+metadata:
+  name: sourceforts
+  namespace: kube-system
+spec:
+  repo: https://k8s-at-home.com/charts/
+  chart: nullserv
+  targetNamespace: games
+  valuesContent: |-
+    controller:
+      replicas: 1
+    probes:
+      readiness:
+        enabled: false
+      liveness:
+        enabled: false
+      startup:
+        custom: true
+        spec:
+          tcpSocket:
+            port: 30107
+          timeoutSeconds: 1
+          periodSeconds: 60
+          successThreshold: 1
+          failureThreshold: 10
+    image:
+      repository: pistonsh/sfclassic
+      tag: latest
+      imagePullPolicy: Always
+    env:
+      SRCDS_PORT: 30107
+      CLIENT_PORT: 30108
+      STEAM_USER_DIR: /data
+    service:
+      main:
+        type: NodePort
+        externalTrafficPolicy: Local
+        ports:
+          http:
+            enabled: false
+          https:
+            enabled: false 
+          rcon:
+            enabled: true
+            protocol: TCP
+            port: 30107
+            nodePort: 30107
+            targetPort: 30107
+          game:
+            enabled: true
+            protocol: UDP
+            port: 30107
+            nodePort: 30107
+            targetPort: 30107
+          client:
+            enabled: true
+            protocol: UDP
+            port: 30108
+            nodePort: 30108
+            targetPort: 30108
+    persistence:
+      data:
+        enabled: true
+        storageClass: local-path
+        mountPath: /data
+        accessMode: ReadWriteOnce
+        size: 256Gi
+    affinity: &aff
+      nodeAffinity:
+        requiredDuringSchedulingIgnoredDuringExecution:
+          nodeSelectorTerms:
+            - matchExpressions:
+                - key: kubernetes.io/hostname
+                  operator: In
+                  values:
+                    - nixkube

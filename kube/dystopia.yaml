@@ -1,0 +1,136 @@
+apiVersion: helm.cattle.io/v1
+kind: HelmChart
+metadata:
+  name: dystopia
+  namespace: kube-system
+spec:
+  repo: https://k8s-at-home.com/charts/
+  chart: nullserv
+  targetNamespace: default
+  valuesContent: |-
+    controller:
+      replicas: 1
+    probes:
+      readiness:
+        enabled: false
+      liveness:
+        enabled: false
+      startup:
+        custom: true
+        spec:
+          tcpSocket:
+            port: 30105
+          timeoutSeconds: 1
+          periodSeconds: 60
+          successThreshold: 1
+          failureThreshold: 10
+    image:
+      repository: ghcr.io/ajvpot/dystopia-dedicated-server
+      tag: latest
+    env:
+      GAME_PORT: 30105
+      CLIENT_PORT: 30106
+      GAME_ARGS: "+maxplayers 32 +map dys_detonate -tickrate 66 +log on +dys_stats_enabled 0"
+    service:
+      main:
+        type: NodePort
+        externalTrafficPolicy: Local
+        ports:
+          http:
+            enabled: false
+          https:
+            enabled: false 
+          rcon:
+            enabled: true
+            protocol: TCP
+            port: 30105
+            nodePort: 30105
+            targetPort: 30105
+          game:
+            enabled: true
+            protocol: UDP
+            port: 30105
+            nodePort: 30105
+            targetPort: 30105
+          client:
+            enabled: true
+            protocol: UDP
+            port: 30106
+            nodePort: 30106
+            targetPort: 30106
+    configmap:
+      config:
+        enabled: true
+        data:
+          server.cfg: |
+            hostname "[aVo] Team Avolition Public"
+            // basic resets
+            sv_gravity 600
+            sv_airaccelerate 10
+            mp_instantspawn 0
+            
+            // rates
+            sv_minrate 200000
+            sv_maxrate 0
+            sv_mincmdrate 15
+            sv_maxcmdrate 64
+            sv_minupdaterate 15
+            sv_maxupdaterate 64
+            
+            // gameplay
+            sv_alltalk 1
+            mp_show_voice_icons 0
+            mp_startdelay 60
+            sv_idlekick_timer 600
+            mp_scalespawntime 0
+            
+            decalfrequency 3
+            
+            mp_rounds 2
+            mp_allowvoting_rounds 1
+            
+            dys_stats_enabled 1
+          admins.cfg: |
+            Admins
+            {
+              "gustopher"
+              {
+                "auth" "steam"
+                "identity" "STEAM_0:1:35061356"
+                "flags" "abcdefghijklmnopqrst"
+              }
+              "ajvpot"
+              {
+                "auth" "steam"
+                "identity" "STEAM_0:1:37954437"
+                "flags" "abcdefghijklmnopqrst"
+              }
+            }
+    persistence:
+      data:
+        enabled: true
+        storageClass: local-path
+        mountPath: /data
+        accessMode: ReadWriteOnce
+        size: 256Gi
+      config:
+        enabled: true
+        type: configMap
+        subPath: server.cfg
+        mountPath: /data/dystopia/cfg/server.cfg
+        name: "{{.Release.Name}}-nullserv-config"
+      admins:
+        enabled: true
+        type: configMap
+        subPath: admins.cfg
+        mountPath: /data/addons/sourcemod/configs/admins.cfg
+        name: "{{.Release.Name}}-nullserv-config"
+    affinity: &aff
+      nodeAffinity:
+        requiredDuringSchedulingIgnoredDuringExecution:
+          nodeSelectorTerms:
+            - matchExpressions:
+                - key: kubernetes.io/hostname
+                  operator: In
+                  values:
+                    - nixkube

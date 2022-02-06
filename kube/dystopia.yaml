@@ -27,10 +27,11 @@ spec:
     image:
       repository: ghcr.io/ajvpot/dystopia-dedicated-server
       tag: latest
+      imagePullPolicy: Always
     env:
       GAME_PORT: 30105
       CLIENT_PORT: 30106
-      GAME_ARGS: "+maxplayers 32 +map dys_detonate -tickrate 66 +log on +dys_stats_enabled 0"
+      GAME_ARGS: "+maxplayers 32 +map dys_detonate -tickrate 100 +log on +dys_stats_enabled 0"
     service:
       main:
         type: NodePort
@@ -63,7 +64,7 @@ spec:
         enabled: true
         data:
           server.cfg: |
-            hostname "[aVo] Team Avolition Public"
+            hostname "aVo | Team Avolition Public [100 tick]"
             // basic resets
             sv_gravity 600
             sv_airaccelerate 10

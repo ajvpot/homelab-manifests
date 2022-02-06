@@ -64,7 +64,7 @@ spec:
         enabled: true
         data:
           server.cfg: |
-            hostname "aVo | Team Avolition [100 tick] [US-West]"
+            hostname "aVo | Team Avolition [100 tick] [US West]"
             // basic resets
             sv_gravity 600
             sv_airaccelerate 10
@@ -104,6 +104,18 @@ spec:
               {
                 "auth" "steam"
                 "identity" "STEAM_0:1:37954437"
+                "flags" "abcdefghijklmnopqrst"
+              }
+              "Sirenfal"
+              {
+                "auth" "steam"
+                "identity" "STEAM_0:0:14902516"
+                "flags" "abcdefghijklmnopqrst"
+              }
+              "Storm_Surge"
+              {
+                "auth" "steam"
+                "identity" "STEAM_0:0:3118159"
                 "flags" "abcdefghijklmnopqrst"
               }
             }

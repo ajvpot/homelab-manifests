@@ -31,7 +31,7 @@ spec:
     env:
       GAME_PORT: 30105
       CLIENT_PORT: 30106
-      GAME_ARGS: "+maxplayers 32 +map dys_detonate -tickrate 100 +log on +dys_stats_enabled 0"
+      GAME_ARGS: "+maxplayers 32 +map dys_detonate -tickrate 66 +log on +dys_stats_enabled 0"
     service:
       main:
         type: NodePort
@@ -64,7 +64,7 @@ spec:
         enabled: true
         data:
           server.cfg: |
-            hostname "aVo | Team Avolition [100 tick] [US West]"
+            hostname "[aVo] Team Avolition (US West)"
             // basic resets
             sv_gravity 600
             sv_airaccelerate 10

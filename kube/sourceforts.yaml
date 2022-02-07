@@ -25,7 +25,7 @@ spec:
           successThreshold: 1
           failureThreshold: 10
     image:
-      repository: pistonsh/sfclassic
+      repository: gusnaughton/sfclassic
       tag: latest
       imagePullPolicy: Always
     env:

@@ -29,7 +29,7 @@ spec:
       tag: latest
       imagePullPolicy: Always
     env:
-      SRCDS_PORT: 30107
+      GAME_PORT: 30107
       CLIENT_PORT: 30108
       STEAM_USER_DIR: /data
     service:

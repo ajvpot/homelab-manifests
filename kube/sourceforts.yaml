@@ -19,17 +19,19 @@ spec:
         custom: true
         spec:
           tcpSocket:
-            port: 30107
+            port: 30115
           timeoutSeconds: 1
           periodSeconds: 60
           successThreshold: 1
           failureThreshold: 10
     image:
       repository: gusnaughton/sfclassic
-      tag: latest
+      tag: v1
       imagePullPolicy: Always
     env:
-      GAME_PORT: 30107
+      GAME_ARGS: "+maxplayers 16 -port 30115 +map sf_astrodome -tickrate 66 +log on"
+      GAME_PORT: "30115"
+      SRCDS_PORT: "30115"
       CLIENT_PORT: 30108
       STEAM_USER_DIR: /data
     service:
@@ -44,21 +46,51 @@ spec:
           rcon:
             enabled: true
             protocol: TCP
-            port: 30107
-            nodePort: 30107
-            targetPort: 30107
+            port: 30115
+            nodePort: 30115
+            targetPort: 30115
           game:
             enabled: true
             protocol: UDP
-            port: 30107
-            nodePort: 30107
-            targetPort: 30107
-          client:
-            enabled: true
-            protocol: UDP
-            port: 30108
-            nodePort: 30108
-            targetPort: 30108
+            port: 30115
+            nodePort: 30115
+            targetPort: 30115
+    configmap:
+      config:
+        enabled: true
+        data:
+          phase_build.cfg: |
+            hostname "[aVo] Team Avolition (US West) [BUILD]"
+          phase_combat.cfg: |
+            hostname "[aVo] Team Avolition (US West) [COMBAT]"
+          admins.cfg: |
+            Admins
+            {
+              "gustopher"
+              {
+                "auth" "steam"
+                "identity" "STEAM_0:1:35061356"
+                "flags" "abcdefghijklmnopqrst"
+              }
+              "ajvpot"
+              {
+                "auth" "steam"
+                "identity" "STEAM_0:1:37954437"
+                "flags" "abcdefghijklmnopqrst"
+              }
+              "Sirenfal"
+              {
+                "auth" "steam"
+                "identity" "STEAM_0:0:14902516"
+                "flags" "abcdefghijklmnopqrst"
+              }
+              "Storm_Surge"
+              {
+                "auth" "steam"
+                "identity" "STEAM_0:0:3118159"
+                "flags" "abcdefghijklmnopqrst"
+              }
+            }
     persistence:
       data:
         enabled: true
@@ -66,6 +98,26 @@ spec:
         mountPath: /data
         accessMode: ReadWriteOnce
         size: 256Gi
+        skipuninstall: true
+        skipUninstall: true
+      configbuild:
+        enabled: true
+        type: configMap
+        subPath: phase_build.cfg
+        mountPath: /data/sfclassic/cfg/phase_build.cfg
+        name: "{{.Release.Name}}-nullserv-config"
+      configcombat:
+        enabled: true
+        type: configMap
+        subPath: phase_combat.cfg
+        mountPath: /data/sfclassic/cfg/phase_combat.cfg
+        name: "{{.Release.Name}}-nullserv-config"
+      admins:
+        enabled: true
+        type: configMap
+        subPath: admins.cfg
+        mountPath: /data/sfclassic/addons/sourcemod/configs/admins.cfg
+        name: "{{.Release.Name}}-nullserv-config"
     affinity: &aff
       nodeAffinity:
         requiredDuringSchedulingIgnoredDuringExecution:

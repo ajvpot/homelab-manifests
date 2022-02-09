@@ -1,0 +1,111 @@
+---
+apiVersion: helm.cattle.io/v1
+kind: HelmChart
+metadata:
+  name: dendrite
+  namespace: kube-system
+spec:
+  repo: https://k8s-at-home.com/charts/
+  chart: dendrite
+  targetNamespace: default
+  valuesContent: |-
+    affinity: &aff
+      nodeAffinity:
+        requiredDuringSchedulingIgnoredDuringExecution:
+          nodeSelectorTerms:
+            - matchExpressions:
+                - key: kubernetes.io/hostname
+                  operator: In
+                  values:
+                    - nixkube
+    postgresql:
+      enabled: true
+      metrics:
+        enabled: true
+        serviceMonitor:
+          enabled: true
+          labels:
+            release: prometheus
+            app: prometheus-dendrite-postgres
+      image:
+        tag: 12
+      persistence:
+        enabled: true
+        storageClass: local-path
+        accessMode: ReadWriteOnce
+        size: 32Gi
+    persistence:
+      jetstream:
+        enabled: true
+        storageClass: local-path
+        accessMode: ReadWriteOnce
+        size: 32Gi
+    dendrite:
+      global:
+        server_name: "vanderpot.net"
+        well_known_server_name: "dendrite.vanderpot.net:443"
+        metrics:
+          enabled: true
+      components:
+        client_api:
+          registration_disabled: true
+    ingress:
+      main:
+        enabled: true
+        hosts:
+          - host: dendrite.vanderpot.net
+            paths:
+              - path: /
+          - host: vanderpot.net
+            paths:
+              - path: /.well-known/matrix/
+        annotations:
+          traefik.ingress.kubernetes.io/router.middlewares: default-block-metrics@kubernetescrd
+
+---
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: dendrite
+  namespace: default
+  labels:
+    release: prometheus
+    app: prometheus-dendrite
+spec:
+  endpoints:
+    - path: /metrics
+      port: http
+      basicAuth:
+        password:
+          name: dendrite-metrics-auth
+          key: password
+        username:
+          name: dendrite-metrics-auth
+          key: user
+  jobLabel: dendrite-metrics
+  namespaceSelector:
+    matchNames:
+      - default
+  selector:
+    matchLabels:
+      app.kubernetes.io/instance: dendrite
+      app.kubernetes.io/name: dendrite
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: Middleware
+metadata:
+  name: block-metrics
+spec:
+  replacePathRegex:
+    regex: ^/metrics
+    replacement: /
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: dendrite-metrics-auth
+  namespace: default
+type: Opaque
+stringData:
+  user: metrics
+  password: metrics

@@ -1,0 +1,41 @@
+apiVersion: helm.cattle.io/v1
+kind: HelmChart
+metadata:
+  name: jellyfin
+  namespace: kube-system
+spec:
+  repo: https://k8s-at-home.com/charts/
+  chart: jellyfin
+  targetNamespace: default
+  valuesContent: |-
+    ingress:
+      main:
+        enabled: true
+        hosts:
+          - host: jellyfin.vanderpot.net
+            paths:
+              - path: /
+    persistence:
+      config:
+        enabled: true
+        type: hostPath
+        mountPath: /config
+        hostPath: /zfs/home/torrent/jellyfin     
+      media:
+        enabled: true
+        type: hostPath
+        hostPath: /bulk/home/torrent/data
+      cache:
+        enabled: true
+        storageClass: local-path
+        accessMode: ReadWriteOnce
+        size: 64Gi
+    affinity: &aff
+      nodeAffinity:
+        requiredDuringSchedulingIgnoredDuringExecution:
+          nodeSelectorTerms:
+            - matchExpressions:
+                - key: kubernetes.io/hostname
+                  operator: In
+                  values:
+                    - nixkube

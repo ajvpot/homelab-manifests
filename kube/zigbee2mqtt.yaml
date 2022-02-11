@@ -28,6 +28,8 @@ spec:
         storageClass: local-path
         accessMode: ReadWriteOnce
         size: 2Gi
+        annotations:
+          "helm.sh/resource-policy": keep
     affinity: &aff
       nodeAffinity:
         requiredDuringSchedulingIgnoredDuringExecution:

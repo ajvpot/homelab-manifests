@@ -60,6 +60,7 @@ spec:
         paths:
           - /
       prometheusSpec:
+        podMonitorSelectorNilUsesHelmValues: false
         scrapeInterval: 15s
         storage: 
           volumeClaimTemplate:

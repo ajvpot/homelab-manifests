@@ -24,6 +24,8 @@ spec:
         enabled: true
         serviceMonitor:
           enabled: true
+          labels:
+            release: prometheus
       image:
         tag: 12
       persistence:
@@ -65,6 +67,8 @@ kind: ServiceMonitor
 metadata:
   name: dendrite
   namespace: default
+  labels:
+    release: prometheus
 spec:
   endpoints:
     - path: /metrics

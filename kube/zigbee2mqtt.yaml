@@ -22,6 +22,8 @@ spec:
           - host: zigbee2mqtt.vanderpot.net
             paths:
               - path: /
+        annotations:
+          traefik.ingress.kubernetes.io/router.middlewares: default-auth@kubernetescrd
     persistence:
       data:
         enabled: true

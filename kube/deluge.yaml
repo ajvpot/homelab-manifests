@@ -98,6 +98,8 @@ kind: ServiceMonitor
 metadata:
   name: deluge
   namespace: default
+  labels:
+    release: prometheus
 spec:
   selector:
     matchLabels:

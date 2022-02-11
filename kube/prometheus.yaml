@@ -20,6 +20,9 @@ spec:
     kubeProxy:
       enabled: false
     alertmanager:
+      config:
+        route:
+          receiver: email
       ingress:
         enabled: true
         annotations:
@@ -77,6 +80,8 @@ kind: ServiceMonitor
 metadata:
   name: traefikmonitor
   namespace: kube-system
+  labels:
+    release: prometheus
 spec:
   jobLabel: traefik-metrics
   selector:

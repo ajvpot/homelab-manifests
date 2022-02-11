@@ -62,14 +62,14 @@ spec:
       prometheusSpec:
         podMonitorSelectorNilUsesHelmValues: false
         scrapeInterval: 15s
-        storage: 
+        storageSpec: 
           volumeClaimTemplate:
             spec:
               storageClassName: local-path
               accessModes: ["ReadWriteOnce"]
               resources:
                 requests:
-                  storage: 50Gi
+                  storage: 128Gi
 
 ---
 apiVersion: monitoring.coreos.com/v1
@@ -77,9 +77,6 @@ kind: ServiceMonitor
 metadata:
   name: traefikmonitor
   namespace: kube-system
-  labels:
-    app: traefik
-    release: prometheus-stack
 spec:
   jobLabel: traefik-metrics
   selector:

@@ -14,9 +14,6 @@ spec:
         enabled: true
         serviceMonitor:
           enabled: true
-          labels:
-            release: prometheus
-            app: prometheus-fooddata-postgres
       postgresqlDatabase: postgres
       postgresqlPassword: postgrespassword
       image:

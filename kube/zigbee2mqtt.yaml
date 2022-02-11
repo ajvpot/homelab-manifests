@@ -12,7 +12,7 @@ spec:
       homeassistant: true
       permit_join: false
       mqtt:
-        server: "mqtt://mosquitto"
+        server: "mqtt://mosquitto:1883"
       serial:
         port: "tcp://ser2sock:10000"
     ingress:
@@ -28,6 +28,8 @@ spec:
         storageClass: local-path
         accessMode: ReadWriteOnce
         size: 2Gi
+        annotations:
+          "helm.sh/resource-policy": keep
     affinity: &aff
       nodeAffinity:
         requiredDuringSchedulingIgnoredDuringExecution:

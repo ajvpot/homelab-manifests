@@ -31,16 +31,6 @@ spec:
         exposedPort: 1883
         port: 1883
         protocol: TCP
-      dnstcp:
-        expose: true
-        exposedPort: 53
-        port: 1053
-        protocol: TCP
-      dnsudp:
-        expose: true
-        exposedPort: 53
-        port: 1053
-        protocol: UDP
     persistence:
       enabled: true
       name: data
@@ -104,7 +94,7 @@ spec:
   chain:
     middlewares:
       - name: https-only
-      - name: secured
+      - name: auth
 ---
 apiVersion: traefik.containo.us/v1alpha1
 kind: Middleware

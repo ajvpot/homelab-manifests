@@ -24,9 +24,9 @@ spec:
         storageClass: local-path
     service:
       dns-tcp:
-        type: ClusterIP
+        type: LoadBalancer
       dns-udp:
-        type: ClusterIP
+        type: LoadBalancer
     ingress:
       main:
         enabled: true
@@ -36,31 +36,3 @@ spec:
               - path: /
         annotations:
           traefik.ingress.kubernetes.io/router.middlewares: default-secured@kubernetescrd
-
----
-apiVersion: traefik.containo.us/v1alpha1
-kind: IngressRouteTCP
-metadata:
-  name: adguard-tcp-route
-  namespace: default
-spec:
-  entryPoints:
-    - dnstcp
-  routes:
-    - match: HostSNI(`*`)
-      services:
-        - name: adguard-adguard-home-dns-tcp
-          port: 53
----
-apiVersion: traefik.containo.us/v1alpha1
-kind: IngressRouteUDP
-metadata:
-  name: adguard-udp-route
-  namespace: default
-spec:
-  entryPoints:
-    - dnsudp
-  routes:
-    - services:
-        - name: adguard-adguard-home-dns-udp
-          port: 53

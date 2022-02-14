@@ -9,6 +9,9 @@ spec:
   chart: lancache
   targetNamespace: default
   valuesContent: |-
+    env:
+      CACHE_MODE: monolithic
+      CACHE_DISK_SIZE: 8388608m
     persistence:
       data:
         enabled: true

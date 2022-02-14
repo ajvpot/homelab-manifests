@@ -23,7 +23,7 @@ spec:
             paths:
               - path: /
         annotations:
-          traefik.ingress.kubernetes.io/router.middlewares: default-auth@kubernetescrd
+          traefik.ingress.kubernetes.io/router.middlewares: default-secured@kubernetescrd
     persistence:
       data:
         enabled: true

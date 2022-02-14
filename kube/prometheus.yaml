@@ -26,7 +26,7 @@ spec:
       ingress:
         enabled: true
         annotations:
-          traefik.ingress.kubernetes.io/router.middlewares: default-auth@kubernetescrd
+          traefik.ingress.kubernetes.io/router.middlewares: default-secured@kubernetescrd
         hosts:
           - alertmanager.vanderpot.net
         paths:
@@ -45,7 +45,7 @@ spec:
       ingress:
         enabled: true
         annotations:
-          traefik.ingress.kubernetes.io/router.middlewares: default-auth@kubernetescrd
+          traefik.ingress.kubernetes.io/router.middlewares: default-secured@kubernetescrd
         hosts:
           - grafana.vanderpot.net
         path: /
@@ -57,7 +57,7 @@ spec:
       ingress:
         enabled: true
         annotations:
-          traefik.ingress.kubernetes.io/router.middlewares: default-auth@kubernetescrd
+          traefik.ingress.kubernetes.io/router.middlewares: default-secured@kubernetescrd
         hosts:
           - prometheus.vanderpot.net
         paths:

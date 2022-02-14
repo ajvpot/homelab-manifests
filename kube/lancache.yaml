@@ -1,0 +1,37 @@
+---
+apiVersion: helm.cattle.io/v1
+kind: HelmChart
+metadata:
+  name: lancache
+  namespace: kube-system
+spec:
+  repo: https://k8s-at-home.com/charts/
+  chart: lancache
+  targetNamespace: default
+  valuesContent: |-
+    persistence:
+      data:
+        enabled: true
+        type: hostPath
+        hostPath: /bulk/home/kube/lancache
+    ingress:
+      main:
+        enabled: true
+        hosts:
+          - host: lancache.vanderpot.net
+            paths:
+              - path: /
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: cache
+  namespace: default
+spec:
+  routes:
+    - match: HostRegexp(`{host:.+}`)
+      kind: Rule
+      services:
+        - name: lancache
+          port: 80
+---

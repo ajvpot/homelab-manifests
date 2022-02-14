@@ -51,12 +51,6 @@ spec:
       - "--providers.kubernetescrd.allowcrossnamespace=true"
       - "--providers.kubernetesingress.allowexternalnameservices=true"    
       - "--serverstransport.insecureskipverify=true"
-      
-      - "--entrypoints.web.http.redirections.entryPoint.to=:443"
-      - "--entrypoints.web.http.redirections.entryPoint.scheme=https"
-      - "--entrypoints.web.http.redirections.entrypoint.permanent=true"
-      
-      #- "--entrypoints.websecure.http.middlewares=default-auth@kubernetescrd"
 ---
 apiVersion: helm.cattle.io/v1
 kind: HelmChart
@@ -101,6 +95,26 @@ spec:
                   operator: In
                   values:
                     - nixkube
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: Middleware
+metadata:
+  name: secured
+spec:
+  chain:
+    middlewares:
+      - name: https-only
+      - name: secured
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: Middleware
+metadata:
+  name: https-only
+  namespace: default
+spec:
+  redirectScheme:
+    scheme: https
+    permanent: true
 ---
 apiVersion: traefik.containo.us/v1alpha1
 kind: Middleware

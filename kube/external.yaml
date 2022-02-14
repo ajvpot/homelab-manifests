@@ -18,7 +18,7 @@ spec:
           port: 8006
           scheme: https
       middlewares:
-        - name: auth
+        - name: secured
           namespace: default
     - match: Host(`old.hass.vanderpot.net`)
       kind: Rule
@@ -26,7 +26,7 @@ spec:
         - name: homeassistant
           port: 8123
       middlewares:
-        - name: auth
+        - name: secured
           namespace: default
     - match: Host(`grafana.vanderpot.net`)
       kind: Rule
@@ -34,7 +34,7 @@ spec:
         - name: homeassistant
           port: 8199
       middlewares:
-        - name: auth
+        - name: secured
           namespace: default
     - match: Host(`adsb.vanderpot.net`)
       kind: Rule
@@ -42,7 +42,7 @@ spec:
         - name: piaware
           port: 80
       middlewares:
-        - name: auth
+        - name: secured
           namespace: default
 
 ---
@@ -127,7 +127,7 @@ spec:
         - name: api@internal # Special service created by Traefik pod
           kind: TraefikService
       middlewares:
-        - name: auth
+        - name: secured
           namespace: default
   tls:
     secretName: vanderpot-net-tls

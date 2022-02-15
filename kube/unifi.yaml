@@ -15,8 +15,10 @@ spec:
     metrics:
       enabled: true
       serviceMonitor:
-        interval: 30s
-        scrapeTimeout: 20s
+        interval: 15s
+        scrapeTimeout: 10s
+        labels:
+          release: prometheus
     affinity: &aff
       nodeAffinity:
         requiredDuringSchedulingIgnoredDuringExecution:

@@ -8,20 +8,12 @@ spec:
     ingressRoute:
       dashboard:
         enabled: false
-    
     deployment:
       kind: DaemonSet
       dnsPolicy: ClusterFirstWithHostNet
-    
-    # no load balancer
     service:
       enabled: false
-    
-    # use host network for directly port listening
     hostNetwork: true
-    #service:
-    #  spec:
-    #    externalTrafficPolicy: Local
     securityContext:
       capabilities:
         add:
@@ -49,16 +41,6 @@ spec:
             - main: vanderpot.net
               sans:
                 - "*.vanderpot.net"
-      #mqtt:
-      #  expose: true
-      #  exposedPort: 1883
-      #  port: 1883
-      #  protocol: TCP
-    #persistence:
-    #  enabled: true
-    #  name: data
-    #  path: /data
-    #  storageClassName: local-path
     additionalArguments:
       - "--providers.kubernetescrd.allowexternalnameservices=true"
       - "--providers.kubernetescrd.allowcrossnamespace=true"

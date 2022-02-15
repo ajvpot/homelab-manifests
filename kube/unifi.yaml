@@ -1,0 +1,28 @@
+---
+apiVersion: helm.cattle.io/v1
+kind: HelmChart
+metadata:
+  name: unifipoller
+  namespace: kube-system
+spec:
+  repo: https://k8s-at-home.com/charts/
+  chart: unifi-poller
+  targetNamespace: default
+  valuesContent: |-
+    envFrom:
+      - secretRef:
+          name: unifi-poller-env
+    metrics:
+      enabled: true
+      serviceMonitor:
+        interval: 30s
+        scrapeTimeout: 20s
+    affinity: &aff
+      nodeAffinity:
+        requiredDuringSchedulingIgnoredDuringExecution:
+          nodeSelectorTerms:
+            - matchExpressions:
+                - key: kubernetes.io/hostname
+                  operator: In
+                  values:
+                    - nixkube

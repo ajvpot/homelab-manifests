@@ -8,17 +8,40 @@ spec:
     ingressRoute:
       dashboard:
         enabled: false
+    
+    deployment:
+      kind: DaemonSet
+      dnsPolicy: ClusterFirstWithHostNet
+    
+    # no load balancer
     service:
-      spec:
-        externalTrafficPolicy: Local
+      enabled: false
+    
+    # use host network for directly port listening
+    hostNetwork: true
+    #service:
+    #  spec:
+    #    externalTrafficPolicy: Local
+    securityContext:
+      capabilities:
+        add:
+          - NET_BIND_SERVICE
+      runAsNonRoot: false
+      runAsUser: 0
     envFrom:
       - configMapRef:
           name: traefik-env
     ports:
       metrics:
         expose: true
+        port: 9001
         exposedPort: 9001
+      traefik:
+        port: 9002
+      web:
+        port: 80
       websecure:
+        port: 443
         tls:
           enabled: true
           #certResolver: letsencrypt
@@ -26,16 +49,16 @@ spec:
             - main: vanderpot.net
               sans:
                 - "*.vanderpot.net"
-      mqtt:
-        expose: true
-        exposedPort: 1883
-        port: 1883
-        protocol: TCP
-    persistence:
-      enabled: true
-      name: data
-      path: /data
-      storageClassName: local-path
+      #mqtt:
+      #  expose: true
+      #  exposedPort: 1883
+      #  port: 1883
+      #  protocol: TCP
+    #persistence:
+    #  enabled: true
+    #  name: data
+    #  path: /data
+    #  storageClassName: local-path
     additionalArguments:
       - "--providers.kubernetescrd.allowexternalnameservices=true"
       - "--providers.kubernetescrd.allowcrossnamespace=true"

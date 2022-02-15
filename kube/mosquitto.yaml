@@ -8,6 +8,9 @@ spec:
   chart: mosquitto
   targetNamespace: default
   valuesContent: |-
+    service:
+      main:
+        type: LoadBalancer
     configmap:
       configinc:
         enabled: true
@@ -29,17 +32,3 @@ spec:
                   operator: In
                   values:
                     - nixkube
----
-apiVersion: traefik.containo.us/v1alpha1
-kind: IngressRouteTCP
-metadata:
-  name: mosquitto.route
-  namespace: default
-spec:
-  entryPoints:
-    - mqtt
-  routes:
-    - match: HostSNI(`*`)
-      services:
-        - name: mosquitto
-          port: 1883

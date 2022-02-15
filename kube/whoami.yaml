@@ -1,0 +1,45 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: whoami
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: whoami
+  template:
+    metadata:
+      labels:
+        app: whoami
+    spec:
+      containers:
+        - name: whoami
+          image: containous/whoami:v1.4.0
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: whoami
+  labels:
+    app: whoami
+spec:
+  type: ClusterIP
+  ports:
+    - port: 80
+      name: whoami
+  selector:
+    app: whoami
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: whoami
+spec:
+  routes:
+    - match: Host(`whoami.vanderpot.net`)
+      kind: Rule
+      services:
+        - name: whoami
+          namespace: default
+          port: 80

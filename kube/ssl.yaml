@@ -16,10 +16,6 @@ spec:
             apiTokenSecretRef:
               name: cloudflare-api-token-secret
               key: api-token
-        selector:
-          dnsZones:
-            - vanderpot.net
-            - cookanywhere.com
 ---
 apiVersion: cert-manager.io/v1
 kind: ClusterIssuer
@@ -39,10 +35,6 @@ spec:
             apiTokenSecretRef:
               name: cloudflare-api-token-secret
               key: api-token
-        selector:
-          dnsZones:
-            - vanderpot.net
-            - cookanywhere.com
 ---
 apiVersion: cert-manager.io/v1
 kind: Certificate

@@ -36,14 +36,6 @@ spec:
         port: 443
         tls:
           enabled: true
-          #certResolver: letsencrypt
-          domains:
-            - main: vanderpot.net
-              sans:
-                - "*.vanderpot.net"
-            - main: cookwherever.com
-              sans:
-                - "*.cookwherever.com"
     additionalArguments:
       - "--providers.kubernetescrd.allowexternalnameservices=true"
       - "--providers.kubernetescrd.allowcrossnamespace=true"

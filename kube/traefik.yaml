@@ -41,6 +41,9 @@ spec:
             - main: vanderpot.net
               sans:
                 - "*.vanderpot.net"
+            - main: cookwherever.com
+              sans:
+                - "*.cookwherever.com"
     additionalArguments:
       - "--providers.kubernetescrd.allowexternalnameservices=true"
       - "--providers.kubernetescrd.allowcrossnamespace=true"

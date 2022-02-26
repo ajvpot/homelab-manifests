@@ -32,7 +32,7 @@ metadata:
   namespace: default
 spec:
   routes:
-    - match: HostRegexp(`{host:.+}`) && !(Host(`vanderpot.net`) || Host(`cookwherever.com`))
+    - match: HostRegexp(`{host:.+}`) && !(HostRegexp`{subdomain:.+}.vanderpot.net`, `{subdomain:.+}.cookwherever.com`)
       kind: Rule
       services:
         - name: lancache

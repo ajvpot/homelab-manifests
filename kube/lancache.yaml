@@ -32,8 +32,9 @@ metadata:
   namespace: default
 spec:
   routes:
-    - match: HostRegexp(`{host:.+}`) && !(HostRegexp`{subdomain:.+}.vanderpot.net`, `{subdomain:.+}.cookwherever.com`)
+    - match: HostRegexp(`{host:.+}`) && !(HostRegexp(`(.+\.?)?vanderpot.net`, `(.+\.?)?cookwherever.com`))
       kind: Rule
+      priority: 1
       services:
         - name: lancache
           port: 80

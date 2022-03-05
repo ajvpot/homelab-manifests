@@ -49,17 +49,3 @@ spec:
   dnsNames:
     - vanderpot.net
     - '*.vanderpot.net'
----
-apiVersion: cert-manager.io/v1
-kind: Certificate
-metadata:
-  name: cookwherever-com
-  namespace: default
-spec:
-  secretName: cookwherever-com-tls
-  issuerRef:
-    name: letsencrypt
-    kind: ClusterIssuer
-  dnsNames:
-    - cookwherever.com
-    - '*.cookwherever.com'

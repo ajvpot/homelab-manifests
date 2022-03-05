@@ -94,7 +94,7 @@ spec:
   chain:
     middlewares:
       - name: https-only
-      - name: auth
+      - name: ak-outpost-authentik-embedded-outpost
 ---
 apiVersion: traefik.containo.us/v1alpha1
 kind: Middleware

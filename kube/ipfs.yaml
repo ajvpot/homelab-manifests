@@ -12,10 +12,13 @@ spec:
     ingress:
       webui:
         enabled: true
+        serviceName: api
         hosts:
           - host: ipfs.vanderpot.net
             paths:
-              - path: /
+              - path: "/"
+        annotations:
+          traefik.ingress.kubernetes.io/router.middlewares: default-secured@kubernetescrd
     env:
       IPFS_PATH: /data
       TZ: UTC
@@ -142,6 +145,7 @@ spec:
         enabled: true
         type: hostPath
         hostPath: /bulk/home/kube/ipfs
+        mountPath: /data
     affinity: &aff
       nodeAffinity:
         requiredDuringSchedulingIgnoredDuringExecution:

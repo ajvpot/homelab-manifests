@@ -1,0 +1,84 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: borg-backup
+  namespace: default
+spec:
+  schedule: "0 3 * * *"
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          volumes:
+            - name: ssh-key-volume
+              secret:
+                secretName: borg-ssh
+                defaultMode: 256
+            - name: backup-etc-rancher
+              hostPath:
+                path: /etc/rancher
+                type: Directory
+            - name: backup-zfs-home-alex-vault
+              hostPath:
+                path: /zfs/home/alex/Vault
+                type: Directory
+            - name: backup-var-lib-rancher-k3s
+              hostPath:
+                path: /var/lib/rancher/k3s
+                type: Directory
+          containers:
+          - name: borg-backup
+            image: ghcr.io/ajvpot/backup-docker:main
+            imagePullPolicy: Always
+            envFrom:
+              - secretRef:
+                  name: borg-env
+            env:
+              - name: BORG_RSH
+                value: "ssh -oBatchMode=yes -oUserKnownHostsFile=/dev/null -oStrictHostKeychecking=no"
+              - name: RESTIC_PASSWORD
+                valueFrom:
+                  secretKeyRef:
+                     name: borg-env
+                     key: BORG_PASSPHRASE
+            volumeMounts:
+              - name: ssh-key-volume
+                mountPath: "/sshkeys"
+                readOnly: true
+              - name: backup-etc-rancher
+                mountPath: "/backup/etc/rancher"
+                readOnly: true
+              #- name: backup-zfs-home-alex-vault
+              #  mountPath: "/backup/zfs/home/alex/Vault"
+              #  readOnly: true
+              - name: backup-var-lib-rancher-k3s
+                mountPath: "/backup/var/lib/rancher/k3s"
+                readOnly: true
+            command:
+            - /bin/bash
+            - -c
+            - |
+              set -euox pipefail
+              
+              mkdir ~/.ssh
+              cat /sshkeys/id_rsa > ~/.ssh/id_rsa
+              chmod 600 ~/.ssh/id_rsa
+              cat <<EOF >>~/.ssh/config
+                Host *
+                  StrictHostKeyChecking no
+              EOF
+                  
+              restic -r sftp:fm1153@fm1153.rsync.net:restic backup \
+                -e 'backup/var/lib/rancher/k3s/agent/containerd/*' \
+                /backup
+              restic -r sftp:fm1153@fm1153.rsync.net:restic forget \
+                --keep-monthly 12 \
+                --keep-weekly 5 \
+                --keep-daily 14
+              
+              backup_exit=$?
+              exit ${backup_exit}
+
+          restartPolicy: OnFailure
+          nodeSelector:
+            kubernetes.io/hostname: nixkube

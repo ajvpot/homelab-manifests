@@ -69,9 +69,11 @@ spec:
               EOF
                   
               restic -r sftp:fm1153@fm1153.rsync.net:restic backup \
+                --host nixkube \
                 -e 'backup/var/lib/rancher/k3s/agent/containerd/*' \
                 /backup
               restic -r sftp:fm1153@fm1153.rsync.net:restic forget \
+                --host nixkube \
                 --keep-monthly 12 \
                 --keep-weekly 5 \
                 --keep-daily 14
